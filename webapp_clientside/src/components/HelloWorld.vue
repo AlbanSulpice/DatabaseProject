@@ -1,7 +1,9 @@
 <template>
   <div class="hello" >
     <home></home>
-    <a href="/#/Login">Différentes vues</a>
+    <a href="/#/client">Client</a>
+    <a href="/#/agency">Agency</a>
+    <a href="/#/property">Property</a>
     
   </div>
 </template>
