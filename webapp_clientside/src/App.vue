@@ -2,6 +2,7 @@
   <div id="app">
     <img src="./assets/logo.png">
     <router-view/>
+    <a href="../src/components/ClientModule.vue">Client vue</a>
   </div>
 </template>
 
