@@ -5,6 +5,8 @@
         ID = {{ id }}<br />
         <a href="/#/agency/list/all">Back to the list</a><br />
         <a href="/#/agency/edit/0">Add a new agency</a><br />
+        <a href="/#/client/list/all">List of clients</a><br />
+      <a href="/#/property/list/all">List of properties</a><br />
       </p>
   
       <!-- For Datasheet: /agency/show/42 -->
@@ -13,7 +15,7 @@
         <tr><td>agency NAME</td><td>{{ oneagency.agency_name }}</td></tr>
         <tr><td>agency ADRESS</td><td>{{ oneagency.agency_adress }}</td></tr>
         <tr><td>agency DateOfCreation</td><td>{{ oneagency.agency_dateofcreation }}</td></tr>
-        <tr><td>agency NumberOfEmployees/td><td>{{ oneagency.agency_numberofemployees}}</td></tr>
+        <tr><td>agency NumberOfEmployees</td><td>{{ oneagency.agency_numberofemployees}}</td></tr>
         <tr><td>agency RATING</td><td>{{ oneagency.agency_rating }}</td></tr>
       </table>
   
