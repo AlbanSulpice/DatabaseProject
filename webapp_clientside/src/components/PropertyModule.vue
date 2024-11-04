@@ -5,8 +5,6 @@
         ID = {{ id }}<br />
         <a href="/#/property/list/all">Back to the list</a><br />
         <a href="/#/property/edit/0">Add a new property</a><br />
-        <a href="/#/agency/list/all">List of agencies</a><br />
-        <a href="/#/client/list/all">List of clients</a><br />
       </p>
   
       <!-- For Datasheet: /property/show/42 -->

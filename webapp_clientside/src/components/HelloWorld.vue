@@ -1,7 +1,7 @@
 <template>
   <div class="hello" >
     <home></home>
-    <a href="/#/client">Différentes vues</a>
+    <a href="/#/Login">Différentes vues</a>
     
   </div>
 </template>
