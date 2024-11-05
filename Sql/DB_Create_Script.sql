@@ -1,5 +1,14 @@
-CREATE database DB1;
+CREATE database if not exists DB1;
 use DB1;
+
+DROP TABLE if exists Landlord;
+DROP TABLE if exists Property;
+DROP TABLE if exists Agency;
+DROP TABLE if exists Client;
+DROP TABLE if exists Sale;
+DROP TABLE if exists Agency_Property;
+DROP TABLE if exists Agency_Client;
+
 CREATE TABLE Landlord (
     id_landlord INT PRIMARY KEY,
     landlord_surname VARCHAR (50) NOT NULL,
