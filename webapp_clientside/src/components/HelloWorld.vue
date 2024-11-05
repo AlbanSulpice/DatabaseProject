@@ -1,9 +1,9 @@
 <template>
   <div class="hello" >
     <home></home>
-    <a href="/#/client">Client</a>
-    <a href="/#/agency">Agency</a>
-    <a href="/#/property">Property</a>
+    <a href="/#/client/list/all">Client</a>
+    <a href="/#/agency/list/all">Agency</a>
+    <a href="/#/property/list/all">Property</a>
     
   </div>
 </template>
