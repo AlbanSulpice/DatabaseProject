@@ -10,11 +10,10 @@
         <a href="/register" id="register-button">Register</a>
       </div>
     </header>
-      <p>
-        ACTION = {{ action }}<br />
-        ID = {{ id }}<br />
+    <main id="main-content">
+    <p id="navigationComponent">
         <a href="/#/property/list/all">Back to the list</a><br />
-        <a href="/#/property/edit/0">Add a new property</a><br />
+        <a href="/#/property/edit/0">Add a new agency</a><br />
         <a href="../components/HelloWorld.vue">Home page</a>
       </p>
   
@@ -56,16 +55,20 @@
       <!-- For List: /property/list/all -->
       <table v-if="action === 'list'" class="table table-striped table-bordered table-hover"> 
         <tr>
-          <td>ID</td><td>NAME</td><td>SHOW DATASHEET</td><td>EDIT property</td><td>DELETE property</td>
+          <td>ID</td><td>ADRESS</td><td>SHOW DATASHEET</td><td>EDIT property</td><td>DELETE property</td>
         </tr>
         <tr v-for="p of property" v-bind:key="p.property_id">
           <td>{{ p.property_id }}</td>
-          <td># {{ p.property_landlord}}</td>
+          <td>{{ p.property_adress}}</td>
           <td><a :href="'/#/property/show/' + p.property_id">[SHOW]</a></td>
           <td><a :href="`/#/property/edit/${p.property_id}`">[EDIT]</a></td>
           <td><input type="button" value="DELETE" @click="sendDeleteRequest()" /></td>
         </tr>
       </table>
+    </main>
+    <footer id="footer">
+      <p>©2024 Aspire Properties, Inc.</p>
+    </footer>
     </div>
   </template>
   
@@ -147,7 +150,43 @@
   background-color: #333;
   color: white;
 }
+#navigationComponent {
+  display: flex;
+  justify-content: center;
+  gap: 15px;  /* Espacement entre les liens */
+}
 
+.btn-navigation {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #28a745;  /* Fond vert */
+  color: white;
+  text-decoration: none;  /* Retirer le soulignement des liens */
+  border: 2px solid #28a745;  /* Bordure verte */
+  border-radius: 5px;
+  font-weight: bold;
+  text-align: center;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+#footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  padding: 15px;
+  background-color: #333;
+  color: white;
+  font-size: 1em;
+}
+.btn-navigation:hover {
+  background-color: #218838;  /* Vert plus foncé au survol */
+  border-color: #218838;  /* Bordure plus foncée au survol */
+}
+
+.btn-navigation:active {
+  background-color: #1e7e34;  /* Encore plus foncé quand on clique */
+  border-color: #1e7e34;
+}
 #logo-container {
   display: flex;
   align-items: center;

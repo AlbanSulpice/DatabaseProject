@@ -10,9 +10,9 @@
         <a href="/register" id="register-button">Register</a>
       </div>
     </header>
-    <p>
-      ACTION = {{ action }}<br />
-      ID = {{ id }}<br />
+    <main id="main-content">
+    <p id="navigationComponent">
+      
       <a href="/#/client/list/all">Back to the list</a><br />
       <a href="/#/client/edit/0">Add a new client</a><br />
       <a href="../components/HelloWorld.vue">Home page</a>
@@ -57,6 +57,10 @@
         <td><input type="button" value="DELETE" @click="sendDeleteRequest()" /></td>
       </tr>
     </table>
+  </main>
+  <footer id="footer">
+      <p>©2024 Aspire Properties, Inc.</p>
+    </footer>
   </div>
 </template>
 
@@ -186,7 +190,44 @@ export default {
     color: darkgray;
     font-size: 16px;
   }
-  
+  #navigationComponent {
+  display: flex;
+  justify-content: center;
+  gap: 15px;  /* Espacement entre les liens */
+}
+
+.btn-navigation {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #28a745;  /* Fond vert */
+  color: white;
+  text-decoration: none;  /* Retirer le soulignement des liens */
+  border: 2px solid #28a745;  /* Bordure verte */
+  border-radius: 5px;
+  font-weight: bold;
+  text-align: center;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.btn-navigation:hover {
+  background-color: #218838;  /* Vert plus foncé au survol */
+  border-color: #218838;  /* Bordure plus foncée au survol */
+}
+
+.btn-navigation:active {
+  background-color: #1e7e34;  /* Encore plus foncé quand on clique */
+  border-color: #1e7e34;
+}
+#footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  padding: 15px;
+  background-color: #333;
+  color: white;
+  font-size: 1em;
+}
   /* Table styles */
   table {
     width: 95%;
