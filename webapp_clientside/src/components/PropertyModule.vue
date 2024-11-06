@@ -1,10 +1,21 @@
 <template>
     <div class="hello">
+      <header id="header">
+      <div id="logo-container">
+        <img src="../assets/logoPrime.png" alt="Aspire Properties Logo" id="logo">
+        <h1 id="agency-name">Aspire Properties</h1>
+      </div>
+      <div id="auth-buttons">
+        <a href="/logIn" id="login-button">Log in</a>
+        <a href="/register" id="register-button">Register</a>
+      </div>
+    </header>
       <p>
         ACTION = {{ action }}<br />
         ID = {{ id }}<br />
         <a href="/#/property/list/all">Back to the list</a><br />
         <a href="/#/property/edit/0">Add a new property</a><br />
+        <a href="../components/HelloWorld.vue">Home page</a>
       </p>
   
       <!-- For Datasheet: /property/show/42 -->
@@ -121,16 +132,182 @@
   </script>
   
   <style scoped>
+  * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Style pour le header */
+#header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  background-color: #333;
+  color: white;
+}
+
+#logo-container {
+  display: flex;
+  align-items: center;
+}
+
+#logo {
+  width: 50px;
+  height: auto;
+  margin-right: 20px;
+}
+
+#agency-name {
+  font-size: 2.5em;
+  font-weight: bold;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+/* Style pour les boutons de connexion et d'inscription */
+#auth-buttons {
+  display: flex;
+  gap: 20px;
+}
+
+#auth-buttons a {
+  padding: 12px 20px;
+  text-decoration: none;
+  color: #333;
+  background-color: #1aff00;
+  border-radius: 5px;
+  font-weight: 500;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#auth-buttons a:hover {
+  background-color: #00e608;
+  color: white;
+}
+  /* Global styles */
   a {
     color: #42b983;
+    text-decoration: none;
+    transition: color 0.3s ease;
   }
+  
+  a:hover {
+    color: #388e3c;
+  }
+  
   p {
     color: darkgray;
+    font-size: 16px;
   }
-  #app table {
-    width: 95%; margin: 20px;
+  
+  /* Table styles */
+  table {
+    width: 95%;
+    margin: 20px;
+    border-collapse: collapse;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
-  #app td {
+  
+  table th, table td {
+    padding: 12px 18px;
     text-align: left;
+    border: 1px solid #ddd;
+  }
+  
+  table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+  }
+  
+  table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  table tr:hover {
+    background-color: #f1f1f1;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Input fields */
+  input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  input[type="button"] {
+    background-color: #42b983;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  input[type="button"]:hover {
+    background-color: #388e3c;
+  }
+  
+  /* Button links */
+  .btn-link {
+    color: #42b983;
+    font-weight: bold;
+    transition: color 0.3s ease;
+  }
+  
+  .btn-link:hover {
+    color: #388e3c;
+  }
+  
+  /* Submit button */
+  .btn-submit {
+    background-color: #42b983;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-submit:hover {
+    background-color: #388e3c;
+  }
+  
+  /* Action buttons (SHOW/EDIT) */
+  .btn-action {
+    color: #42b983;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 5px 10px;
+    border: 1px solid #42b983;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .btn-action:hover {
+    background-color: #42b983;
+    color: white;
+  }
+  
+  /* Delete button */
+  .btn-delete {
+    background-color: #f44336;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-delete:hover {
+    background-color: #d32f2f;
   }
   </style>
