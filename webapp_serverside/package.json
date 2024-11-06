@@ -1,5 +1,5 @@
 {
-  "name": "webaapp_serverside",
+  "name": "webapp_serverside",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -16,7 +16,7 @@
     "ejs": "^3.1.10",
     "express": "^4.21.1",
     "express-session": "^1.18.1",
-    "mysql2": "^3.11.3",
+    "mysql2": "^3.11.4",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0"
   }

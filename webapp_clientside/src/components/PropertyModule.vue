@@ -47,9 +47,9 @@
         <tr>
           <td>ID</td><td>NAME</td><td>SHOW DATASHEET</td><td>EDIT property</td><td>DELETE property</td>
         </tr>
-        <tr v-for="p of property" v-bind:key="c.property_id">
+        <tr v-for="p of property" v-bind:key="p.property_id">
           <td>{{ p.property_id }}</td>
-          <td>{{ p.property_landlord}}</td>
+          <td># {{ p.property_landlord}}</td>
           <td><a :href="'/#/property/show/' + p.property_id">[SHOW]</a></td>
           <td><a :href="`/#/property/edit/${p.property_id}`">[EDIT]</a></td>
           <td><input type="button" value="DELETE" @click="sendDeleteRequest()" /></td>
@@ -87,9 +87,9 @@
           this.landlord = responseLandlord.data;
           */
   
-          this.landlord = [ { landlord_id: 1, landlord_surname: "Dupont", landlord_firstname: "Pierre" }, { landlord_id: 2, landlord_surname: "Martin", landlord_firstname: "Sophie" }, { landlord_id: 3, landlord_surname: "Durand", landlord_firstname: "Lucas" },{ landlord_id: 4, landlord_surname: "Bernard", landlord_firstname: "Elodie" },{ landlord_id: 5, landlord_surname: "Lefevre", landlord_firstname: "Nicolas" } ];
+          this.landlords = [ { landlord_id: 1, landlord_surname: "Dupont", landlord_firstname: "Pierre" }, { landlord_id: 2, landlord_surname: "Martin", landlord_firstname: "Sophie" }, { landlord_id: 3, landlord_surname: "Durand", landlord_firstname: "Lucas" },{ landlord_id: 4, landlord_surname: "Bernard", landlord_firstname: "Elodie" },{ landlord_id: 5, landlord_surname: "Lefevre", landlord_firstname: "Nicolas" } ];
   
-          this.property = [ { property_id: 1, property_type: "Appartement", property_surfacearea: "75m²", property_bathrooms: 2, property_bedrooms: 3, property_adress:"10 rue de Paris, 75001 Paris", property_landlord:1 }, { property_id: 2, property_type: "Maison", property_surfacearea: "120m²", property_bathrooms: 3, property_bedrooms: 5, property_adress: "25 avenue des Champs, 75008 Paris",property_landlord:2 },{ property_id: 3, property_type: "Studio", property_surfacearea: "25m²", property_bathrooms: 1, property_bedrooms: 1, property_adress: "5 rue de Lille, 75007 Paris",property_landlord:1 },{ property_id: 4, property_type: "Villa", property_surfacearea: "200m²", property_bathrooms: 4, property_bedrooms: 6, property_adress: "15 avenue Montaigne, 75008 Paris",property_landlord:3 },{ property_id: 5, property_type: "Maison", property_surfacearea: "150m²", property_bathrooms: 3, property_bedrooms: 4, property_adress: "12 rue du Bac, 75007 Paris",property_landlord:4 },{ property_id: 6, property_type: "Appartement", property_surfacearea: "85m²", property_bathrooms: 2, property_bedrooms: 3, property_adress: "8 rue de la Paix, 75002 Paris",property_landlord:5 } ];
+          this.property = [ { property_id: 1, property_type: "Appartement", property_surfacearea: "75m²", property_bathrooms: 2, property_bedrooms: 3, property_adress:"10 rue de Paris, 75001 Paris", property_landlord:1 }, { property_id: 2, property_type: "Maison", property_surfacearea: "120m²", property_bathrooms: 3, property_bedrooms: 5, property_adress: "25 avenue des Champs, 75008 Paris",property_landlord:2 },{ property_id: 3, property_type: "Studio", property_surfacearea: "25m²", property_bathrooms: 1, property_bedrooms: 1, property_adress: "5 rue de Lille, 75007 Paris",property_landlord:1 },{    property_id: 4, property_type: "Villa", property_surfacearea: "200m²", property_bathrooms: 4, property_bedrooms: 6, property_adress: "15 avenue Montaigne, 75008 Paris",property_landlord:3 },{ property_id: 5, property_type: "Maison", property_surfacearea: "150m²", property_bathrooms: 3, property_bedrooms: 4, property_adress: "12 rue du Bac, 75007 Paris",property_landlord:4 },{ property_id: 6, property_type: "Appartement", property_surfacearea: "85m²", property_bathrooms: 2, property_bedrooms: 3, property_adress: "8 rue de la Paix, 75002 Paris",property_landlord:5 } ];
   
           this.refreshoneProperty();
         }
