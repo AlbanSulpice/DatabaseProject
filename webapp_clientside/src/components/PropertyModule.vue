@@ -2,19 +2,19 @@
     <div class="hello">
       <header id="header">
       <div id="logo-container">
-        <img src="../assets/logoPrime.png" alt="Aspire Properties Logo" id="logo">
+        <a href="../components/HelloWorld.vue"><img src="../assets/logoPrime.png" alt="Aspire Properties Logo" id="logo"></a>
         <h1 id="agency-name">Aspire Properties</h1>
       </div>
       <div id="auth-buttons">
         <a href="/#/login" id="login-button">Log in</a>
         <a href="/#/inscription" id="register-button">Register</a>
+        <a href="../components/HelloWorld.vue">Home page</a>
       </div>
     </header>
     <main id="main-content">
     <p id="navigationComponent">
         <a href="/#/property/list/all">Back to the list</a><br />
         <button id="addNewPropertyButton" @click="addNewProperty()">Add a new property</button><br />
-        <a href="../components/HelloWorld.vue">Home page</a>
       </p>
   
       <!-- For Datasheet: /property/show/42 -->
