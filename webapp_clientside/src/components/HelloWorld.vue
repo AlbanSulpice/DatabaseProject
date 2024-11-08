@@ -19,6 +19,7 @@
         <a href="/#/agency" class="side-nav-link" id="agency-link">Agency</a>
         <a href="/#/property" class="side-nav-link" id="property-link">Property</a>
         <a href="/#/landlord" class="side-nav-link" id="landlord-link">Landlord</a>
+        <a href="/#/sale" class="side-nav-link" id="landlord-link">Sale</a>
       </div>
 
       <!-- Company Description -->
