@@ -1,10 +1,21 @@
 <template>
   <div class="hello">
-    <p>
-      ACTION = {{ action }}<br />
-      ID = {{ id }}<br />
+    <header id="header">
+      <div id="logo-container">
+        <img src="../assets/logoPrime.png" alt="Aspire Properties Logo" id="logo">
+        <h1 id="agency-name">Aspire Properties</h1>
+      </div>
+      <div id="auth-buttons">
+        <a href="/#/login" id="login-button">Log in</a>
+        <a href="/#/inscription" id="register-button">Register</a>
+      </div>
+    </header>
+    <main id="main-content">
+    <p id="navigationComponent">
+      
       <a href="/#/client/list/all">Back to the list</a><br />
-      <a href="/#/client/edit/0">Add a new client</a><br />
+      <button id="addNewClientButton" @click="addNewClient()">Add a new client</button><br />
+      <a href="../components/HelloWorld.vue">Home page</a>
     </p>
 
     <!-- For Datasheet: /client/show/42 -->
@@ -46,6 +57,10 @@
         <td><input type="button" value="DELETE" @click="sendDeleteRequest()" /></td>
       </tr>
     </table>
+  </main>
+  <footer id="footer">
+      <p>©2024 Aspire Properties, Inc.</p>
+    </footer>
   </div>
 </template>
 
@@ -91,8 +106,62 @@ export default {
       }
       catch (ex) { console.log(ex); }
     },
-    async sendDeleteRequest() { },
-    async sendEditRequest() { }
+    async addNewClient() {
+    try {
+      // Génération d'un nouvel ID
+      const newId = this.client.length ? Math.max(...this.client.map(client => client.client_id)) + 1 : 1;
+      
+      // Création d'un nouveau client avec les valeurs par défaut ou celles que l'utilisateur a saisies
+      const newClient = {
+        client_id: newId,
+        client_gender: this.oneClient.client_gender || "Unknown",
+        client_name: this.oneClient.client_name || "New Client",
+        client_email: this.oneClient.client_email || "new@example.com",
+        client_number: this.oneClient.client_number || "0000000000",
+        client_taxnumber: this.oneClient.client_taxnumber || "FR0000000000"
+      };
+      
+      // Ajout du nouveau client au tableau
+      this.client.push(newClient);
+      alert("New client added successfully!");
+
+      // Réinitialisation de oneClient pour un nouveau formulaire
+      this.oneClient = {
+        client_id: 0,
+        client_gender: "",
+        client_name: "",
+        client_email: "",
+        client_number: "",
+        client_taxnumber: ""
+      };
+    } catch (error) {
+      console.error("Error adding new client:", error);
+    }
+  },
+    async sendDeleteRequest() {
+    try {
+      // Suppression dans le tableau simulé
+      this.client = this.client.filter(client => client.client_id !== this.oneClient.client_id);
+      alert("Client deleted successfully!");
+      this.oneClient = {}; // Réinitialise l'objet oneClient
+    } catch (error) {
+      console.error("Error deleting client:", error);
+    }
+  },
+  async sendEditRequest() {
+    try {
+      // Recherche et mise à jour du client dans le tableau simulé
+      const index = this.client.findIndex(client => client.client_id === this.oneClient.client_id);
+      if (index !== -1) {
+        this.client[index] = { ...this.oneClient };
+        alert("Client updated successfully!");
+      } else {
+        alert("Client not found");
+      }
+    } catch (error) {
+      console.error("Error updating client:", error);
+    }
+  }
   },
   watch: {
     id: function(newVal, oldVal) {
@@ -106,16 +175,231 @@ export default {
 </script>
 
 <style scoped>
-a {
+  * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Style pour le header */
+#header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  background-color: #333;
+  color: white;
+}
+#addNewClientButton {
   color: #42b983;
+  background: none;
+  border: none;
+  font-size: 16px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
 }
-p {
-  color: darkgray;
+
+#addNewClientButton:hover {
+  color: #388e3c;
 }
-#app table {
-  width: 95%; margin: 20px;
+#logo-container {
+  display: flex;
+  align-items: center;
 }
-#app td {
-  text-align: left;
+
+#logo {
+  width: 50px;
+  height: auto;
+  margin-right: 20px;
 }
-</style>
+
+#agency-name {
+  font-size: 2.5em;
+  font-weight: bold;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+/* Style pour les boutons de connexion et d'inscription */
+#auth-buttons {
+  display: flex;
+  gap: 20px;
+}
+
+#auth-buttons a {
+  padding: 12px 20px;
+  text-decoration: none;
+  color: #333;
+  background-color: #1aff00;
+  border-radius: 5px;
+  font-weight: 500;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#auth-buttons a:hover {
+  background-color: #00e608;
+  color: white;
+}
+  /* Global styles */
+  a {
+    color: #42b983;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  a:hover {
+    color: #388e3c;
+  }
+  
+  p {
+    color: darkgray;
+    font-size: 16px;
+  }
+  #navigationComponent {
+  display: flex;
+  justify-content: center;
+  gap: 15px;  /* Espacement entre les liens */
+}
+
+.btn-navigation {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #28a745;  /* Fond vert */
+  color: white;
+  text-decoration: none;  /* Retirer le soulignement des liens */
+  border: 2px solid #28a745;  /* Bordure verte */
+  border-radius: 5px;
+  font-weight: bold;
+  text-align: center;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.btn-navigation:hover {
+  background-color: #218838;  /* Vert plus foncé au survol */
+  border-color: #218838;  /* Bordure plus foncée au survol */
+}
+
+.btn-navigation:active {
+  background-color: #1e7e34;  /* Encore plus foncé quand on clique */
+  border-color: #1e7e34;
+}
+#footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  padding: 15px;
+  background-color: #333;
+  color: white;
+  font-size: 1em;
+}
+  /* Table styles */
+  table {
+    width: 95%;
+    margin: 20px;
+    border-collapse: collapse;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  table th, table td {
+    padding: 12px 18px;
+    text-align: left;
+    border: 1px solid #ddd;
+  }
+  
+  table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+  }
+  
+  table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  table tr:hover {
+    background-color: #f1f1f1;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Input fields */
+  input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  input[type="button"] {
+    background-color: #42b983;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  input[type="button"]:hover {
+    background-color: #388e3c;
+  }
+  
+  /* Button links */
+  .btn-link {
+    color: #42b983;
+    font-weight: bold;
+    transition: color 0.3s ease;
+  }
+  
+  .btn-link:hover {
+    color: #388e3c;
+  }
+  
+  /* Submit button */
+  .btn-submit {
+    background-color: #42b983;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-submit:hover {
+    background-color: #388e3c;
+  }
+  
+  /* Action buttons (SHOW/EDIT) */
+  .btn-action {
+    color: #42b983;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 5px 10px;
+    border: 1px solid #42b983;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .btn-action:hover {
+    background-color: #42b983;
+    color: white;
+  }
+  
+  /* Delete button */
+  .btn-delete {
+    background-color: #f44336;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-delete:hover {
+    background-color: #d32f2f;
+  }
+  </style>
