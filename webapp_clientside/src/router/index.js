@@ -7,6 +7,7 @@ import PropertyModule from '@/components/PropertyModule.vue'
 import LandlordModule from '../components/LandlordModule.vue'
 import Inscription from '../components/inscription.vue'
 import login from '../components/login.vue'
+import SalesModule from '../components/SalesModule.vue'
 
 Vue.use(Router)
 
@@ -66,6 +67,16 @@ export default new Router({
       path: '/landlord/:action/:id',  
       name: 'landlord',
       component: LandlordModule,
+      props: true
+    },
+    {
+      path: '/sale',
+      redirect: '/sale/list/all'
+    },
+    {
+      path: '/sale/:action/:id',  
+      name: 'sale',
+      component: SalesModule,
       props: true
     }
   ]
