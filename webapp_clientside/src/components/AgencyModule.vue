@@ -13,7 +13,7 @@
     <main id="main-content">
       <p id="navigationComponent">
         <a href="/#/agency/list/all">Back to the list</a><br />
-        <a href="/#/agency/edit/0">Add a new agency</a><br />
+        <button id="addNewAgencyButton" @click="addNewAgency()">Add a new agency</button><br />
         <a href="../components/HelloWorld.vue">Home page</a>
       </p>
   
@@ -105,8 +105,51 @@
         }
         catch (ex) { console.log(ex); }
       },
-      async sendDeleteRequest() { },
-      async sendEditRequest() { }
+      async addNewAgency() {
+  try {
+    // Créez un nouvel objet pour l'agence avec des valeurs par défaut
+    const newAgency = {
+      agency_id: this.agency.length + 1, // Générez un nouvel ID basé sur la longueur actuelle du tableau
+      agency_name: 'New Agency',
+      agency_adress: 'Adress to define',
+      agency_dateofcreation: new Date().toISOString().split('T')[0], // Date actuelle au format AAAA-MM-JJ
+      agency_numberofemployees: 0,
+      agency_rating: 0
+    };
+
+    // Ajoutez la nouvelle agence au tableau simulé
+    this.agency.push(newAgency);
+
+    // Affichez un message de confirmation
+    alert("New agency added with success !");
+  } catch (error) {
+    console.error("Error when adding of the new agency :", error);
+  }
+},
+    async sendDeleteRequest() {
+    try {
+      // Suppression dans le tableau simulé
+      this.agency = this.agency.filter(agency => agency.agency_id !== this.oneagency.agency_id);
+      alert("Agency deleted successfully!");
+      this.oneagency = {}; // Réinitialise l'objet oneagency
+    } catch (error) {
+      alert("Error deleting Agency:", error);
+    }
+  },
+  async sendEditRequest() {
+    try {
+      // Recherche et mise à jour du client dans le tableau simulé
+      const index = this.agency.findIndex(agency => agency.agency_id === this.oneagency.agency_id);
+      if (index !== -1) {
+        this.agency[index] = { ...this.oneagency };
+        alert("Agency updated successfully!");
+      } else {
+        console.error("Agency not found");
+      }
+    } catch (error) {
+      console.error("Error updating Agency:", error);
+    }
+  }
     },
     watch: {
       id: function(newVal, oldVal) {
@@ -140,7 +183,19 @@
   justify-content: center;
   gap: 15px;  /* Espacement entre les liens */
 }
+#addNewAgencyButton {
+  color: #42b983;
+  background: none;
+  border: none;
+  font-size: 16px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
 
+#addNewAgencyButton:hover {
+  color: #388e3c;
+}
 .btn-navigation {
   display: inline-block;
   padding: 10px 20px;

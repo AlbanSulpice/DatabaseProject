@@ -14,7 +14,7 @@
     <p id="navigationComponent">
       
       <a href="/#/client/list/all">Back to the list</a><br />
-      <a href="/#/client/edit/0">Add a new client</a><br />
+      <button id="addNewClientButton" @click="addNewClient()">Add a new client</button><br />
       <a href="../components/HelloWorld.vue">Home page</a>
     </p>
 
@@ -106,8 +106,62 @@ export default {
       }
       catch (ex) { console.log(ex); }
     },
-    async sendDeleteRequest() { },
-    async sendEditRequest() { }
+    async addNewClient() {
+    try {
+      // Génération d'un nouvel ID
+      const newId = this.client.length ? Math.max(...this.client.map(client => client.client_id)) + 1 : 1;
+      
+      // Création d'un nouveau client avec les valeurs par défaut ou celles que l'utilisateur a saisies
+      const newClient = {
+        client_id: newId,
+        client_gender: this.oneClient.client_gender || "Unknown",
+        client_name: this.oneClient.client_name || "New Client",
+        client_email: this.oneClient.client_email || "new@example.com",
+        client_number: this.oneClient.client_number || "0000000000",
+        client_taxnumber: this.oneClient.client_taxnumber || "FR0000000000"
+      };
+      
+      // Ajout du nouveau client au tableau
+      this.client.push(newClient);
+      alert("New client added successfully!");
+
+      // Réinitialisation de oneClient pour un nouveau formulaire
+      this.oneClient = {
+        client_id: 0,
+        client_gender: "",
+        client_name: "",
+        client_email: "",
+        client_number: "",
+        client_taxnumber: ""
+      };
+    } catch (error) {
+      console.error("Error adding new client:", error);
+    }
+  },
+    async sendDeleteRequest() {
+    try {
+      // Suppression dans le tableau simulé
+      this.client = this.client.filter(client => client.client_id !== this.oneClient.client_id);
+      alert("Client deleted successfully!");
+      this.oneClient = {}; // Réinitialise l'objet oneClient
+    } catch (error) {
+      console.error("Error deleting client:", error);
+    }
+  },
+  async sendEditRequest() {
+    try {
+      // Recherche et mise à jour du client dans le tableau simulé
+      const index = this.client.findIndex(client => client.client_id === this.oneClient.client_id);
+      if (index !== -1) {
+        this.client[index] = { ...this.oneClient };
+        alert("Client updated successfully!");
+      } else {
+        alert("Client not found");
+      }
+    } catch (error) {
+      console.error("Error updating client:", error);
+    }
+  }
   },
   watch: {
     id: function(newVal, oldVal) {
@@ -136,7 +190,19 @@ export default {
   background-color: #333;
   color: white;
 }
+#addNewClientButton {
+  color: #42b983;
+  background: none;
+  border: none;
+  font-size: 16px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
 
+#addNewClientButton:hover {
+  color: #388e3c;
+}
 #logo-container {
   display: flex;
   align-items: center;

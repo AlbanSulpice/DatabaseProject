@@ -13,7 +13,7 @@
     <main id="main-content">
     <p id="navigationComponent">
         <a href="/#/property/list/all">Back to the list</a><br />
-        <a href="/#/property/edit/0">Add a new agency</a><br />
+        <button id="addNewPropertyButton" @click="addNewProperty()">Add a new property</button><br />
         <a href="../components/HelloWorld.vue">Home page</a>
       </p>
   
@@ -33,7 +33,7 @@
         <tr><td>landlord</td>
           <td>
             <select name="property_landlord" v-model="oneProperty.property_landlord" >
-              <option v-for="l of landlord" v-bind:key="l.landlord_id" :value="l.landlord_id" >
+              <option v-for="l of landlords" v-bind:key="l.landlord_id" :value="l.landlord_id" >
                 {{ l.landlord_firstname }}
               </option>
             </select>
@@ -120,8 +120,51 @@
         }
         catch (ex) { console.log(ex); }
       },
-      async sendDeleteRequest() { },
-      async sendEditRequest() { }
+      async addNewProperty() {
+    try {
+      // Create a new property with default values
+      const newProperty = {
+        property_id: this.property.length + 1, // Auto-increment ID based on array length
+        property_type: "New Type",
+        property_surfacearea: "0m²",
+        property_bathrooms: 0,
+        property_bedrooms: 0,
+        property_adress: "New Address",
+        property_landlord: this.landlords.length > 0 ? this.landlords[0].landlord_id : 0 // Default to the first landlord
+      };
+
+      // Add the new property to the local array
+      this.property.push(newProperty);
+      console.log('New property successfully added (simulation)');
+    } catch (error) {
+      console.error('Error while adding a new property (simulation):', error);
+    }
+  },
+      async sendDeleteRequest() {
+    try {
+      // Simulate deletion by removing the property from the local array
+      this.property = this.property.filter(p => p.property_id !== this.oneProperty.property_id);
+      alert('Property successfully deleted ');
+    } catch (error) {
+      console.error('Error while deleting the property :', error);
+    }
+  },
+
+  // Function to simulate editing a property
+  async sendEditRequest() {
+    try {
+      // Simulate updating the property in the local array
+      const index = this.property.findIndex(p => p.property_id === this.oneProperty.property_id);
+      if (index !== -1) {
+        this.property[index] = { ...this.oneProperty };
+        console.log('Property successfully edited (simulation)');
+      } else {
+        console.error('Property not found for editing (simulation)');
+      }
+    } catch (error) {
+      console.error('Error while editing the property (simulation):', error);
+    }
+  }
     },
     watch: {
       id: function(newVal, oldVal) {
@@ -149,6 +192,19 @@
   padding: 20px 40px;
   background-color: #333;
   color: white;
+}
+#addNewPropertyButton {
+  color: #42b983;
+  background: none;
+  border: none;
+  font-size: 16px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+#addNewPropertyButton:hover {
+  color: #388e3c;
 }
 #navigationComponent {
   display: flex;
