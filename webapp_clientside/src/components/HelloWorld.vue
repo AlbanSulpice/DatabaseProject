@@ -7,7 +7,7 @@
         <h1 id="agency-name">Aspire Properties</h1>
       </div>
       <div id="auth-buttons">
-        <a href="../components/seConnecter.html" id="login-button">Log in</a>
+        <a href="/#/login" id="login-button">Log in</a>
         <a href="/#/inscription" id="register-button">Register</a>
       </div>
     </header>

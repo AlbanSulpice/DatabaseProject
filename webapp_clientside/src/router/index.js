@@ -6,6 +6,7 @@ import AgencyModule from '@/components/AgencyModule'
 import PropertyModule from '@/components/PropertyModule.vue'
 import LandlordModule from '../components/LandlordModule.vue'
 import Inscription from '../components/inscription.vue'
+import login from '../components/login.vue'
 
 Vue.use(Router)
 
@@ -20,6 +21,11 @@ export default new Router({
       path: '/inscription',
       name: 'inscription',
       component: Inscription,
+      props: true
+    },{
+      path: '/login',
+      name: 'login',
+      component: login,
       props: true
     },
     {
