@@ -1,0 +1,388 @@
+<template>
+    <div class="hello">
+      <header id="header">
+        <div id="logo-container">
+          <img src="../assets/logoPrime.png" alt="Aspire Properties Logo" id="logo">
+          <h1 id="agency-name">Aspire Properties</h1>
+        </div>
+        <div id="auth-buttons">
+          <a href="../components/seConnecter.html" id="login-button">Log in</a>
+          <a href="../components/inscription.html" id="register-button">Register</a>
+        </div>
+      </header>
+      <main id="main-content">
+      <p id="navigationComponent">
+        
+        <a href="/#/landlord/list/all">Back to the list</a><br />
+        <button id="addNewlandlordButton" @click="addNewLandlord()">Add a new landlord</button><br />
+        <a href="../components/HelloWorld.vue">Home page</a>
+      </p>
+  
+      <!-- For Datasheet: /landlord/show/42 -->
+      <table v-if="action === 'show'" class="table table-striped table-bordered table-hover" > 
+        <tr><td>ID</td><td>{{ oneLandlord.landlord_id }}</td></tr>
+        <tr><td>LANDLORD FIRSTNAME</td><td>{{ oneLandlord.landlord_firstname }}</td></tr>
+        <tr><td>LANDLORD SURNAME</td><td>{{ oneLandlord.landlord_surname }}</td></tr>
+      </table>
+  
+      <!-- For Form: /landlord/edit/23 -->
+      <table v-if="action === 'edit'" class="table table-striped table-bordered table-hover"> 
+        <tr><td>SURNAME</td>
+          <td><input type="text" name="landlord_surname" v-model="oneLandlord.landlord_surname" /></td></tr>
+        <tr><td>FIRSTNAME</td>
+          <td><input type="text" name="landlord_firstname" v-model="oneLandlord.landlord_firstname" /></td></tr>
+        <tr><td colspan="2">
+          <input type="button" value="SEND" @click="sendEditRequest()" /></td></tr>
+      </table>
+  
+      <!-- For List: /landlord/list/all -->
+      <table v-if="action === 'list'" class="table table-striped table-bordered table-hover"> 
+        <tr>
+          <td>ID</td><td>SURNAME</td><td>FIRSTNAME</td><td>SHOW DATASHEET</td><td>EDIT landlord</td><td>DELETE landlord</td>
+        </tr>
+        <tr v-for="c of landlord" v-bind:key="c.landlord_id">
+          <td>{{ c.landlord_id }}</td>
+          <td>{{ c.landlord_surname }}</td>
+          <td>{{ c.landlord_firstname }}</td>
+          <td><a :href="'/#/landlord/show/' + c.landlord_id">[SHOW]</a></td>
+          <td><a :href="`/#/landlord/edit/${c.landlord_id}`">[EDIT]</a></td>
+          <td><input type="button" value="DELETE" @click="sendDeleteRequest()" /></td>
+        </tr>
+      </table>
+    </main>
+    <footer id="footer">
+        <p>©2024 Aspire Properties, Inc.</p>
+      </footer>
+    </div>
+  </template>
+  
+  <script>
+  export default {
+    name: 'landlord',
+    props: ['action', 'id'],
+    data () {
+      return {
+        landlord: [],
+        oneLandlord: {
+          landlord_id: 0,
+          landlord_firstname: 'xxx',
+          landlord_surname: 'xxx',
+        }
+      }
+    },
+    methods: {
+      async getAllData() {
+        try {
+          /*
+          let responselandlords = await this.$http.get("xxxx");
+          this.landlord = responselandlords.data;
+          */
+  
+          this.landlord = [ { landlord_id: 1, landlord_firstname: "Pierre", landlord_surname: "Dupont"}, { landlord_id: 2, landlord_firstname: "Sophie", landlord_surname: "Martin"},{ landlord_id: 3, landlord_firstname: "Lucas", landlord_surname: "Durant"},{ landlord_id: 4, landlord_firstname: "Elodie", landlord_surname: "Bernard"},{ landlord_id: 5, landlord_firstname: "Nicolas", landlord_surname: "Lefevre"} ];
+  
+          this.refreshoneLandlord();
+        }
+        catch (ex) { console.log(ex); }
+      }, 
+      async refreshoneLandlord() {
+        if (this.$props.id === "all" || this.$props.id === "0") return;
+        try {
+          /*
+            let responselandlord = await this.$http.get("xxxx");
+            this.oneLandlord = responselandlord.data;
+          */
+          this.oneLandlord = this.landlord.find(landlord => landlord.landlord_id == this.$props.id);
+        }
+        catch (ex) { console.log(ex); }
+      },
+      async addNewLandlord() {
+      try {
+        // Génération d'un nouvel ID
+        const newId = this.landlord.length ? Math.max(...this.landlord.map(landlord => landlord.landlord_id)) + 1 : 1;
+        
+        // Création d'un nouveau landlord avec les valeurs par défaut ou celles que l'utilisateur a saisies
+        const newlandlord = {
+          landlord_id: newId,
+          landlord_firstname: this.oneLandlord.landlord_firstname || "Unknown",
+          landlord_surname: this.oneLandlord.landlord_surname || "Unknown",
+        };
+        
+        // Ajout du nouveau landlord au tableau
+        this.landlord.push(newlandlord);
+        alert("New landlord added successfully!");
+  
+        // Réinitialisation de oneLandlord pour un nouveau formulaire
+        this.oneLandlord = {
+          landlord_id: 0,
+          landlord_firstname: "",
+          landlord_surname: "",
+        };
+      } catch (error) {
+        console.error("Error adding new landlord:", error);
+      }
+    },
+      async sendDeleteRequest() {
+      try {
+        // Suppression dans le tableau simulé
+        this.landlord = this.landlord.filter(landlord => landlord.landlord_id !== this.oneLandlord.landlord_id);
+        alert("landlord deleted successfully!");
+        this.oneLandlord = {}; // Réinitialise l'objet oneLandlord
+      } catch (error) {
+        console.error("Error deleting landlord:", error);
+      }
+    },
+    async sendEditRequest() {
+      try {
+        // Recherche et mise à jour du landlord dans le tableau simulé
+        const index = this.landlord.findIndex(landlord => landlord.landlord_id === this.oneLandlord.landlord_id);
+        if (index !== -1) {
+          this.landlord[index] = { ...this.oneLandlord };
+          alert("landlord updated successfully!");
+        } else {
+          alert("landlord not found");
+        }
+      } catch (error) {
+        console.error("Error updating landlord:", error);
+      }
+    }
+    },
+    watch: {
+      id: function(newVal, oldVal) {
+        this.refreshoneLandlord();
+      }
+    },
+    created(){
+      this.getAllData();
+    }
+  }
+  </script>
+  
+  <style scoped>
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Style pour le header */
+  #header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    background-color: #333;
+    color: white;
+  }
+  #addNewlandlordButton {
+    color: #42b983;
+    background: none;
+    border: none;
+    font-size: 16px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+  
+  #addNewlandlordButton:hover {
+    color: #388e3c;
+  }
+  #logo-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  #logo {
+    width: 50px;
+    height: auto;
+    margin-right: 20px;
+  }
+  
+  #agency-name {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #fff;
+    text-transform: uppercase;
+  }
+  
+  /* Style pour les boutons de connexion et d'inscription */
+  #auth-buttons {
+    display: flex;
+    gap: 20px;
+  }
+  
+  #auth-buttons a {
+    padding: 12px 20px;
+    text-decoration: none;
+    color: #333;
+    background-color: #1aff00;
+    border-radius: 5px;
+    font-weight: 500;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  #auth-buttons a:hover {
+    background-color: #00e608;
+    color: white;
+  }
+    /* Global styles */
+    a {
+      color: #42b983;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    
+    a:hover {
+      color: #388e3c;
+    }
+    
+    p {
+      color: darkgray;
+      font-size: 16px;
+    }
+    #navigationComponent {
+    display: flex;
+    justify-content: center;
+    gap: 15px;  /* Espacement entre les liens */
+  }
+  
+  .btn-navigation {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #28a745;  /* Fond vert */
+    color: white;
+    text-decoration: none;  /* Retirer le soulignement des liens */
+    border: 2px solid #28a745;  /* Bordure verte */
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+  
+  .btn-navigation:hover {
+    background-color: #218838;  /* Vert plus foncé au survol */
+    border-color: #218838;  /* Bordure plus foncée au survol */
+  }
+  
+  .btn-navigation:active {
+    background-color: #1e7e34;  /* Encore plus foncé quand on clique */
+    border-color: #1e7e34;
+  }
+  #footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 15px;
+    background-color: #333;
+    color: white;
+    font-size: 1em;
+  }
+    /* Table styles */
+    table {
+      width: 95%;
+      margin: 20px;
+      border-collapse: collapse;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    table th, table td {
+      padding: 12px 18px;
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+    
+    table th {
+      background-color: #f4f4f4;
+      font-weight: bold;
+    }
+    
+    table tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    
+    table tr:hover {
+      background-color: #f1f1f1;
+      transition: background-color 0.3s ease;
+    }
+    
+    /* Input fields */
+    input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    
+    input[type="button"] {
+      background-color: #42b983;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    
+    input[type="button"]:hover {
+      background-color: #388e3c;
+    }
+    
+    /* Button links */
+    .btn-link {
+      color: #42b983;
+      font-weight: bold;
+      transition: color 0.3s ease;
+    }
+    
+    .btn-link:hover {
+      color: #388e3c;
+    }
+    
+    /* Submit button */
+    .btn-submit {
+      background-color: #42b983;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    
+    .btn-submit:hover {
+      background-color: #388e3c;
+    }
+    
+    /* Action buttons (SHOW/EDIT) */
+    .btn-action {
+      color: #42b983;
+      font-weight: bold;
+      text-decoration: none;
+      padding: 5px 10px;
+      border: 1px solid #42b983;
+      border-radius: 4px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .btn-action:hover {
+      background-color: #42b983;
+      color: white;
+    }
+    
+    /* Delete button */
+    .btn-delete {
+      background-color: #f44336;
+      color: white;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    
+    .btn-delete:hover {
+      background-color: #d32f2f;
+    }
+    </style>

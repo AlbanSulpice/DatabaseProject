@@ -7,8 +7,8 @@
         <h1 id="agency-name">Aspire Properties</h1>
       </div>
       <div id="auth-buttons">
-        <a href="/logIn" id="login-button">Log in</a>
-        <a href="/register" id="register-button">Register</a>
+        <a href="../components/seConnecter.html" id="login-button">Log in</a>
+        <a href="../components/inscription.html" id="register-button">Register</a>
       </div>
     </header>
 
@@ -18,6 +18,7 @@
         <a href="/#/client" class="side-nav-link" id="client-link">Client</a>
         <a href="/#/agency" class="side-nav-link" id="agency-link">Agency</a>
         <a href="/#/property" class="side-nav-link" id="property-link">Property</a>
+        <a href="/#/landlord" class="side-nav-link" id="landlord-link">Landlord</a>
       </div>
 
       <!-- Company Description -->

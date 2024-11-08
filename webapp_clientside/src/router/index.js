@@ -4,6 +4,7 @@ import HelloWorld from '@/components/HelloWorld'
 import ClientModule from '@/components/ClientModule'
 import AgencyModule from '@/components/AgencyModule'
 import PropertyModule from '@/components/PropertyModule.vue'
+import LandlordModule from '../components/LandlordModule.vue'
 
 Vue.use(Router)
 
@@ -42,6 +43,16 @@ export default new Router({
       path: '/property/:action/:id',  
       name: 'property',
       component: PropertyModule,
+      props: true
+    },
+    {
+      path: '/landlord',
+      redirect: '/landlord/list/all'
+    },
+    {
+      path: '/landlord/:action/:id',  
+      name: 'landlord',
+      component: LandlordModule,
       props: true
     }
   ]
