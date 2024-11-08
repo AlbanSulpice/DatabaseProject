@@ -5,6 +5,7 @@ import ClientModule from '@/components/ClientModule'
 import AgencyModule from '@/components/AgencyModule'
 import PropertyModule from '@/components/PropertyModule.vue'
 import LandlordModule from '../components/LandlordModule.vue'
+import Inscription from '../components/inscription.vue'
 
 Vue.use(Router)
 
@@ -14,6 +15,12 @@ export default new Router({
       path: '/',
       name: 'HelloWorld',
       component: HelloWorld
+    },
+    {
+      path: '/inscription',
+      name: 'inscription',
+      component: Inscription,
+      props: true
     },
     {
       path: '/client',

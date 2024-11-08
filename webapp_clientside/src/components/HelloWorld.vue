@@ -8,7 +8,7 @@
       </div>
       <div id="auth-buttons">
         <a href="../components/seConnecter.html" id="login-button">Log in</a>
-        <a href="../components/inscription.html" id="register-button">Register</a>
+        <a href="/#/inscription" id="register-button">Register</a>
       </div>
     </header>
 
