@@ -80,12 +80,12 @@ INSERT INTO landlords (landlord_id, landlord_surname, landlord_firstname) VALUES
 (5, 'Lefevre', 'Nicolas');
 
 INSERT INTO properties (property_id, property_type, property_surfacearea, property_bathrooms, property_bedrooms, property_adress, property_landlord) VALUES
-(1, 'Appartement', '75.00m²', 2, 3, '10 rue de Paris, 75001 Paris', 1),
-(2, 'Maison', '120.00m²', 3, 5, '25 avenue des Champs, 75008 Paris', 2),
-(3, 'Studio', '35.00m²', 1, 1, '5 rue de Lille, 75007 Paris', 1),
-(4, 'Villa', '200.00m²', 4, 6, '15 avenue Montaigne, 75008 Paris', 3),
-(5, 'Maison', '150.00m²', 3, 4, '12 rue du Bac, 75007 Paris', 4),
-(6, 'Appartement', '85.00m²', 2, 3, '8 rue de la Paix, 75002 Paris', 5);
+(1, 'Appartement', 75.00, 2, 3, '10 rue de Paris, 75001 Paris', 1),
+(2, 'Maison', 120.00, 3, 5, '25 avenue des Champs, 75008 Paris', 2),
+(3, 'Studio', 35.00, 1, 1, '5 rue de Lille, 75007 Paris', 1),
+(4, 'Villa', 200.00, 4, 6, '15 avenue Montaigne, 75008 Paris', 3),
+(5, 'Maison', 150.00, 3, 4, '12 rue du Bac, 75007 Paris', 4),
+(6, 'Appartement', 85.00, 2, 3, '8 rue de la Paix, 75002 Paris', 5);
 
 INSERT INTO agencies (agency_id, agency_name, agency_adress, agency_dateofcreation, agency_numberofemployees, agency_rating) VALUES
 (1, 'Agence Paris Immo', '50 rue de Rivoli, 75004 Paris', '2010-05-01', 50, 4),

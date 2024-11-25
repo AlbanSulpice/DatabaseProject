@@ -49,5 +49,9 @@ app.get('/', (request, response) => { // 'GET' as a HTTP VERB, not as a 'getter'
 // setup additional routes
 // app.use(routeBase, callback);
 app.use("/static", express.static(__dirname + '/static'));
-app.use("/carsapi", require("./controllers/carsapi.route"));
+app.use("/carsapi", require("./controllers/clientsapi.route"));
+app.use("/carsapi", require("./controllers/agenciesapi.route"));
+app.use("/carsapi", require("./controllers/landlordsapi.route"));
+app.use("/carsapi", require("./controllers/propertiesapi.route"));
+app.use("/carsapi", require("./controllers/salesapi.route"));
 // app.use("/auth", require("./controllers/auth.route"));
