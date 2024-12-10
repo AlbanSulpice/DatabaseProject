@@ -82,10 +82,10 @@ module.exports = {
             throw err; 
         }
     },
-    async addOneProperty(landlordId){ 
+    async addOneProperty(){ 
         try {
-            let sql = "INSERT INTO properties (property_id, property_landlord) VALUES (NULL, ?) ";
-            const [okPacket, fields] = await pool.execute(sql, [ landlordId ]); 
+            let sql = "INSERT INTO properties (property_id) VALUES (NULL) ";
+            const [okPacket, fields] = await pool.execute(sql); 
             console.log("INSERT " + JSON.stringify(okPacket));
             return okPacket.insertId;
         }

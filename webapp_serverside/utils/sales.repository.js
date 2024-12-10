@@ -109,16 +109,28 @@ module.exports = {
             throw err; 
         }
     },
-    async addOneSale(landlordId, propertyId, agencyId){ 
+    async addOneSale(){ 
+        let connection;
         try {
-            let sql = "INSERT INTO sales (sale_id, sale_landlord, sale_client, sale_agency) VALUES (NULL, ?, ?, ?) ";
-            const [okPacket, fields] = await pool.execute(sql, [ landlordId, propertyId, agencyId ]); 
+            connection = await pool.getConnection(); // Obtenir une connexion du pool
+    
+            // Insérer un client avec tous les champs à NULL (puisque les colonnes acceptent NULL)
+            let sqlInsert = `INSERT INTO sales (sale_amount, sale_comission, sale_landlord, sale_client, sale_agency) 
+                             VALUES (?, ?, ?, ?, ?)`;
+    
+            // Exécution de la requête avec NULL pour tous les champs
+            const [okPacket] = await connection.execute(sqlInsert, [null, null, null, null, null]);
+    
             console.log("INSERT " + JSON.stringify(okPacket));
-            return okPacket.insertId;
-        }
-        catch (err) {
+            
+            // Retourner l'ID généré automatiquement pour ce client
+            return okPacket.insertId; 
+    
+        } catch (err) {
             console.log(err);
-            throw err; 
+            throw err;
+        } finally {
+            if (connection) connection.release(); // Libérer la connexion
         }
     },
     async editOneSale(SaleId, SaleAmount, SaleComission, SaleLandlord, SaleProperty, SaleAgency){ 

@@ -112,7 +112,23 @@
         catch (ex) { console.log(ex); }
       },
       async addNewAgency() {
-},
+  try {
+    // Send a request to the backend to add a new client
+    let response = await this.$http.post("http://localhost:9000/agenciesapi/add");
+
+    // Assuming the backend returns the new client ID
+    if (response.status === 201) {
+      alert(`New agency added with ID: ${response.data.newAgencyId}`);
+      this.getAllData();  // Refresh the list of clients
+    } else {
+      alert("Failed to add new agency.");
+    }
+  } catch (ex) {
+    console.log(ex);
+    alert("An error occurred while adding the client.");
+  }
+  }
+,
 async sendDeleteRequest(agencyId) {
       try {
         alert("DELETING... " + agencyId);

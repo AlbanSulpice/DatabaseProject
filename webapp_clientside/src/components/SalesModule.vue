@@ -163,6 +163,19 @@
         catch (ex) { console.log(ex); }
       },
       async addNewSale() {
+  try {
+    let response = await this.$http.post("http://localhost:9000/salesapi/add");
+
+    if (response.status === 201) {
+      alert(`New client added with ID: ${response.data.newSaleId}`);
+      this.getAllData();  
+    } else {
+      alert("Failed to add new sale.");
+    }
+  } catch (ex) {
+    console.log(ex);
+    alert("An error occurred while adding the sale.");
+  }
   },
   async sendDeleteRequest(saleId) {
       try {

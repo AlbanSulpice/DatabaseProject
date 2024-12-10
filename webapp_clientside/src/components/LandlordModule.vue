@@ -3,7 +3,7 @@
       <header id="header">
         <div id="logo-container">
           <a href="../components/HelloWorld.vue"><img src="../assets/logoPrime.png" alt="Aspire Properties Logo" id="logo"></a>
-          <h1 id="agency-name">Aspire Properties</h1>
+          <h1 id="landlord-name">Aspire Properties</h1>
         </div>
         <div id="auth-buttons">
           <a href="/#/login" id="login-button">Log in</a>
@@ -102,7 +102,24 @@
         catch (ex) { console.log(ex); }
       },
       async addNewLandlord() {
-    },
+  try {
+    // Make a POST request to the backend to add a new landlord
+    const response = await this.$http.post("http://localhost:9000/landlordsapi/add");
+
+    // The response will contain the new landlord's ID
+    const newLandlordId = response.data.newLandlordId;
+
+    // Optionally, you can redirect the user to the newly created landlord's page
+    this.$router.push({ path: `/landlord/show/${newLandlordId}` });
+
+    // You can also refresh the landlord list if needed
+    this.getAllData();
+  } catch (error) {
+    console.error("Error adding new landlord:", error);
+    alert("Failed to add new landlord");
+  }
+}
+,
     async sendDeleteRequest(landlordId) {
       try {
         alert("DELETING... " + landlordId);
@@ -175,7 +192,7 @@
     margin-right: 20px;
   }
   
-  #agency-name {
+  #landlord-name {
     font-size: 2.5em;
     font-weight: bold;
     color: #fff;

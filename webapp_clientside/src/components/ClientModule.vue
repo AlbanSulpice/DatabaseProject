@@ -106,6 +106,21 @@ export default {
       catch (ex) { console.log(ex); }
     },
     async addNewClient() {
+  try {
+    // Send a request to the backend to add a new client
+    let response = await this.$http.post("http://localhost:9000/clientsapi/add");
+
+    // Assuming the backend returns the new client ID
+    if (response.status === 201) {
+      alert(`New client added with ID: ${response.data.newClientId}`);
+      this.getAllData();  // Refresh the list of clients
+    } else {
+      alert("Failed to add new client.");
+    }
+  } catch (ex) {
+    console.log(ex);
+    alert("An error occurred while adding the client.");
+  }
   },
     async sendDeleteRequest(clientId) {
       try {

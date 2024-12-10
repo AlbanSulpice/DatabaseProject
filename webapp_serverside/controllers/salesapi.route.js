@@ -10,6 +10,7 @@ router.get('/list', saleListAction);
 router.get('/show/:saleId', saleShowAction);
 router.get('/del/:saleId', saleDelAction);
 router.post('/update/:saleId', saleUpdateAction);
+router.post('/add', saleAddAction);
 
 // http://localhost:9000/salesapi/brands
 async function landlordsListAction(request, response) {
@@ -53,5 +54,15 @@ async function saleUpdateAction(request, response) {
     let result = { rowsUpdated: numRows };
     response.send(JSON.stringify(result));
 }
+async function saleAddAction(request, response) {
+    try {
+        const newSaleId = await saleRepo.addOneSale();
 
+        let result = { newSaleId };
+        response.status(201).send(JSON.stringify(result));
+    } catch (error) {
+        console.error("Error adding new sale:", error);
+        response.status(500).send({ error: "Failed to add sale" });
+    }
+}
 module.exports = router;

@@ -3,7 +3,7 @@
       <header id="header">
       <div id="logo-container">
         <a href="../components/HelloWorld.vue"><img src="../assets/logoPrime.png" alt="Aspire Properties Logo" id="logo"></a>
-        <h1 id="agency-name">Aspire Properties</h1>
+        <h1 id="property-name">Aspire Properties</h1>
       </div>
       <div id="auth-buttons">
         <a href="/#/login" id="login-button">Log in</a>
@@ -144,7 +144,23 @@
         catch (ex) { console.log(ex); }
       },
       async addNewProperty() {
-      },
+  try {
+    // Send a request to the backend to add a new client
+    let response = await this.$http.post("http://localhost:9000/propertiesapi/add");
+
+    // Assuming the backend returns the new client ID
+    if (response.status === 201) {
+      alert(`New property added with ID: ${response.data.newPropertyId}`);
+      this.getAllData();  // Refresh the list of clients
+    } else {
+      alert("Failed to add new property.");
+    }
+  } catch (ex) {
+    console.log(ex);
+    alert("An error occurred while adding the property.");
+  }
+  }
+,
       async sendDeleteRequest(propertyId) {
       try {
         alert("DELETING... " + propertyId);
@@ -258,7 +274,7 @@
   margin-right: 20px;
 }
 
-#agency-name {
+#property-name {
   font-size: 2.5em;
   font-weight: bold;
   color: #fff;
