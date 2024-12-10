@@ -7,7 +7,7 @@
         <h1 id="agency-name">Aspire Properties</h1>
       </div>
       <div id="auth-buttons">
-        <a href="/#/AuthModule" id="register-button">Log in</a>
+        <a href="/#/auth" id="register-button">Log in</a>
       </div>
     </header>
 

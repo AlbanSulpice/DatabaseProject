@@ -6,8 +6,7 @@
           <h1 id="landlord-name">Aspire Properties</h1>
         </div>
         <div id="auth-buttons">
-          <a href="/#/login" id="login-button">Log in</a>
-          <a href="/#/inscription" id="register-button">Register</a>
+          <a href="/#/auth" id="register-button">Log in</a>
           <a href="../components/HelloWorld.vue">Home page</a>
         </div>
       </header>
