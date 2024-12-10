@@ -1,95 +1,42 @@
 <template>
-    <div>
-        <header>
-            <header id="header">
-                <div id="logo-container">
-                  <img src="../assets/logoPrime.png" alt="Aspire Properties Logo" id="logo">
-                  <h1 id="agency-name">Aspire Properties</h1>
-                </div>
-                <div id="navgiation-link">
-                  <a href="/#/login" id="login-button">Log in</a>
-                  <a href="HelloWorld.vue">Home page</a>
-                </div>
-              </header>
-        </header>
-
-        <h2>Register</h2>
-        <fieldset>
-            <legend>Your informations</legend>
-            <form>
-                <label for="last_name_input">Surname :</label>
-                <input type="text" id="last_name_input"><br>
-
-                <label for="first_name_input">Firstname :</label>
-                <input type="text" id="first_name_input"><br>
-
-                <label for="date_input">Date of birth :</label>
-                <input type="date" id="date_input"><br>
-
-                <label for="mail_input">Email adress:</label>
-                <input type="email" id="mail_input"><br>
-
-                <label for="password_input">Password :</label>
-                <input type="password" id="password_input"><br>
-
-                <label for="password_confirm_input">Confirm password :</label>
-                <input type="password" id="password_confirm_input"><br>
-
-                <label for="select_input">Status :</label>
-                <select id="select_input">
-                    <option value="option1">Choose</option>
-                    <option value="option2">Single</option>
-                    <option value="option3">Married</option>
-                    <option value="option4">Civil partnership</option>
-                    <option value="option5">Divorce</option>
-                    <option value="option6">Widower</option>
-                </select><br>
-            </form>
-        </fieldset>
-
-        <fieldset>
-            <legend>Situation</legend>
-            <ol>
-                <li>What's your job/current situation ?</li>
-                <form class="frequence">
-                    <input name="frequence" type="radio" id="radio1" value="radio1">
-                    <label for="radio1">a. Unemployed</label><br>
-                    <input name="frequence" type="radio" id="radio2" value="radio2">
-                    <label for="radio2">b. Student</label><br>
-                    <input name="frequence" type="radio" id="radio3" value="radio3">
-                    <label for="radio3">c. Working</label><br><br>
-                </form>
-
-                <li>Tell us more</li>
-                <form class="sujets">
-                    <input type="checkbox" id="checkbox1" value="checkbox1">
-                    <label for="checkbox1">a. Tenant</label><br>
-                    <input type="checkbox" id="checkbox2" value="checkbox2">
-                    <label for="checkbox2">b. Owner main residence or other</label><br>
-                    <input type="checkbox" id="checkbox3" value="checkbox3">
-                    <label for="checkbox3">c. Accommodated free of charge</label><br><br>
-                </form>
-
-                <li>Approximate salary per year</li>
-                <form class="evenement">
-                    <label for="evenement_input"></label>
-                    <input type="text" id="evenement_input">
-                </form>
-            </ol>
-            <form>
-                <button type="submit">Send</button>
-            </form>
-        </fieldset>
-
-        <footer>
-            <p>©️2024 Aspire Properties, Inc.</p>
-        </footer>
-    </div>
+  <div class="hello">
+    <h1>Authentication demo</h1>
+    <p>{{ msg }}</p>
+    <input type="button" @click="sendRequest('post', 'login', { username: 'joeuser', userpass: 'joeXXX' })" value="LOGIN BAD" />
+    <input type="button" @click="sendRequest('post', 'login', { username: 'joeuser', userpass: 'joepass' })" value="LOGIN USER" />
+    <input type="button" @click="sendRequest('post', 'login', { username: 'joeadmin', userpass: 'joepass' })" value="LOGIN ADMIN" />
+    <input type="button" @click="sendRequest('get', 'user')" value="ACCESS /user" />
+    <input type="button" @click="sendRequest('get', 'admin')" value="ACCESS /admin" />
+    <input type="button" @click="sendRequest('get', 'protected')" value="ACCESS /protected" />
+    <input type="button" @click="sendRequest('get', 'logout')" value="LOGOUT" />
+  </div>
 </template>
+
 <script>
 export default {
-    name: 'inscription'
+  name: 'AuthenticationDemo',
+  data () {
+    return {
+      msg: 'Welcome to Your Vue.js App'
+    }
+  },
+  methods: {
+    async sendRequest(method, endpoint, params) {
+      try {
+        let response = null;
+        if (method === "post") 
+          response = await this.$http.post("http://localhost:9000/auth/"+endpoint, params);
+        else
+          response = await this.$http.get("http://localhost:9000/auth/"+endpoint);
+        this.msg = JSON.stringify(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  },
+
 }
+</script>
 </script>
 <style scoped>
 * {
