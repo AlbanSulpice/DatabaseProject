@@ -94,7 +94,7 @@
         };
         try {
           
-            let responselandlord = await this.$http.get("http://localhost:9000/landlordsapi/show/");
+            let responselandlord = await this.$http.get("http://localhost:9000/landlordsapi/show/"+ this.$props.id);
             this.oneLandlord = responselandlord.data;
           
           //this.oneLandlord = this.landlord.find(landlord => landlord.landlord_id == this.$props.id);

@@ -57,7 +57,7 @@ module.exports = {
             // SQL INJECTION => !!!!ALWAYS!!!! sanitize user input!
             // escape input (not very good) OR prepared statements (good) OR use orm (GOOD!)
             let sql = "SELECT * FROM properties INNER JOIN landlords ON property_landlord=landlord_id WHERE property_id = ?";
-            const [rows, fields] = await pool.execute(sql, [ PropertyIdId ]);
+            const [rows, fields] = await pool.execute(sql, [ PropertyId ]);
             console.log("SINGLE PROPERTY FETCHED: "+rows.length);
             if (rows.length == 1) {
                 return rows[0];

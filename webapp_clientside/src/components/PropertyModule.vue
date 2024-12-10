@@ -101,7 +101,7 @@
       async getAllData() {
         try {
           
-          let responseproperty = await this.$http.get("http://localhost:9000/propertiesapi/list");
+          let responseproperty = await fetch("http://localhost:9000/propertiesapi/list");
           this.property = await responseproperty.json();
           let responseLandlord = await this.$http.get("http://localhost:9000/propertiesapi/landlords");
           this.landlord = responseLandlord.data;
@@ -130,7 +130,7 @@
       };
         try {
           
-            let responseproperty = await this.$http.get("http://localhost:9000/propertiesapi/show/");
+            let responseproperty = await this.$http.get("http://localhost:9000/propertiesapi/show/"+ this.$props.id);
             this.oneProperty = responseproperty.data;
           
           //this.oneProperty = this.property.find(property => property.property_id == this.$props.id);

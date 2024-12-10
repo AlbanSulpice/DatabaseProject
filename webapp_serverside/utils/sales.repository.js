@@ -8,7 +8,7 @@ module.exports = {
           "sale_amount": 0,
           "sale_comission": 0,
           "sale_landlord":0,
-          "sale_property":0,
+          "sale_client":0,
           "sale_agency":0
         };
     },
@@ -26,12 +26,12 @@ module.exports = {
             throw err; // return false ???
         }
     },
-    async getAllProperties(){ // TODO? move to brands.repository.js
+    async getAllClients(){ // TODO? move to brands.repository.js
         try {
-            let sql = "SELECT * FROM properties";
+            let sql = "SELECT * FROM clients";
 			// .execute() does: getConnection() + prepare() + query() + releaseConnection()
             const [rows, fields] = await pool.execute(sql); 
-            console.log("PROPERTIES FETCHED: "+rows.length);
+            console.log("clients FETCHED: "+rows.length);
             return rows;
         }
         catch (err) {
@@ -56,7 +56,7 @@ module.exports = {
     },
     async getAllSales(){ 
         try {
-            let sql = "SELECT * FROM sales INNER JOIN landlords ON sale_landlord=landlord_id INNER JOIN properties ON sale_property=property_id INNER JOIN agencies ON sale_agency=agency_id";
+            let sql = "SELECT * FROM sales INNER JOIN landlords ON sale_landlord=landlord_id INNER JOIN clients ON sale_client=client_id INNER JOIN agencies ON sale_agency=agency_id";
             const [rows, fields] = await pool.execute(sql);
             console.log("SaleS FETCHED: "+rows.length);
             return rows;
@@ -68,7 +68,7 @@ module.exports = {
     },
     async getSalesByName(name){ 
         try {
-            let sql = "SELECT * FROM sales INNER JOIN landlords ON sale_landlord=landlord_id INNER JOIN properties ON sale_property=property_id INNER JOIN agencies ON sale_agency=agency_id WHERE upper(name) like upper(?)";
+            let sql = "SELECT * FROM sales INNER JOIN landlords ON sale_landlord=landlord_id INNER JOIN clients ON sale_client=client_id INNER JOIN agencies ON sale_agency=agency_id WHERE upper(name) like upper(?)";
             const [rows, fields] = await pool.execute(sql, [ `%${name}%` ]);
             console.log("SaleS FILTERED: "+rows.length);
             return rows;
@@ -83,7 +83,7 @@ module.exports = {
             // sql = "SELECT * FROM Sales INNER JOIN brands ON sale_landlord=landlord_id WHERE Sale_id = "+SaleId; 
             // SQL INJECTION => !!!!ALWAYS!!!! sanitize user input!
             // escape input (not very good) OR prepared statements (good) OR use orm (GOOD!)
-            let sql = "SELECT * FROM sales INNER JOIN landlords ON sale_landlord=landlord_id INNER JOIN properties ON sale_property=property_id INNER JOIN agencies ON sale_agency=agency_id WHERE Sale_id = ?";
+            let sql = "SELECT * FROM sales INNER JOIN landlords ON sale_landlord=landlord_id INNER JOIN clients ON sale_client=client_id INNER JOIN agencies ON sale_agency=agency_id WHERE Sale_id = ?";
             const [rows, fields] = await pool.execute(sql, [ SaleId ]);
             console.log("SINGLE Sale FETCHED: "+rows.length);
             if (rows.length == 1) {
@@ -111,7 +111,7 @@ module.exports = {
     },
     async addOneSale(landlordId, propertyId, agencyId){ 
         try {
-            let sql = "INSERT INTO sales (sale_id, sale_landlord, sale_property, sale_agency) VALUES (NULL, ?, ?, ?) ";
+            let sql = "INSERT INTO sales (sale_id, sale_landlord, sale_client, sale_agency) VALUES (NULL, ?, ?, ?) ";
             const [okPacket, fields] = await pool.execute(sql, [ landlordId, propertyId, agencyId ]); 
             console.log("INSERT " + JSON.stringify(okPacket));
             return okPacket.insertId;
@@ -123,7 +123,7 @@ module.exports = {
     },
     async editOneSale(SaleId, SaleAmount, SaleComission, SaleLandlord, SaleProperty, SaleAgency){ 
         try {
-            let sql = "UPDATE sales SET sale_amount=?, sale_comission=?, sale_landlord=?, sale_property=?, sale_agency=? WHERE Sale_id=? "; // positional parameters
+            let sql = "UPDATE sales SET sale_amount=?, sale_comission=?, sale_landlord=?, sale_client=?, sale_agency=? WHERE Sale_id=? "; // positional parameters
             const [okPacket, fields] = await pool.execute(sql, 
                   [SaleAmount, SaleComission, SaleLandlord, SaleProperty, SaleAgency, SaleId]); // positional parameters
             console.log("UPDATE " + JSON.stringify(okPacket));

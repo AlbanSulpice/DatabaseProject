@@ -105,7 +105,7 @@
         return;
       };
         try {
-            let responseagency = await this.$http.get("http://localhost:9000/agenciesapi/show/");
+            let responseagency = await this.$http.get("http://localhost:9000/agenciesapi/show/"+ this.$props.id);
             this.oneagency = responseagency.data;
           //this.oneagency = this.agency.find(agency => agency.agency_id == this.$props.id);
         }

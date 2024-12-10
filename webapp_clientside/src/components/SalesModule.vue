@@ -123,14 +123,14 @@
       async getAllData() {
         try {
           
-          let responsesale = await this.$http.get("http://localhost:9000/salesapi/list");
+          let responsesale = await fetch("http://localhost:9000/salesapi/list");
           this.sale = await responsesale.json();
-          let responseLandlord = await this.$http.get("http://localhost:9000/salesapi/landlords");
+          let responseLandlord = await fetch("http://localhost:9000/salesapi/landlords");
           this.landlords = await responseLandlord.json();
-          let responseProperty = await this.$http.get("http://localhost:9000/salesapi/properties");
-          this.property = await responseProperty.json();
-          let responseClient = await this.$http.get("http://localhost:9000/salesapi/agencies");
-          this.client = responseClient.data;
+          let responseClient = await fetch("http://localhost:9000/salesapi/clients");
+          this.client = await responseClient.json();
+          let responseAgency = await this.$http.get("http://localhost:9000/salesapi/agencies");
+          this.agency = responseAgency.data;
         
           /*this.agency = [ { agency_id: 1, agency_name: "Agence Paris Immo", agency_adress: "50 rue de Rivoli, 75004 Paris", agency_dateofcreation: "2010-05-01", agency_numberofemployees: 50, agency_rating: 4.5 }, { agency_id: 2, agency_name: "ImmoLux", agency_adress: "22 rue Lafayette, 75009 Paris", agency_dateofcreation: "2012-07-15", agency_numberofemployees: 40, agency_rating: 4.8 },{ agency_id: 3, agency_name: "TopAgence", agency_adress: "85 avenue Foch, 75016 Paris", agency_dateofcreation: "2015-03-20", agency_numberofemployees: 30, agency_rating: 4.2 }];
           this.landlords = [ { landlord_id: 1, landlord_surname: "Dupont", landlord_firstname: "Pierre" }, { landlord_id: 2, landlord_surname: "Martin", landlord_firstname: "Sophie" }, { landlord_id: 3, landlord_surname: "Durand", landlord_firstname: "Lucas" },{ landlord_id: 4, landlord_surname: "Bernard", landlord_firstname: "Elodie" },{ landlord_id: 5, landlord_surname: "Lefevre", landlord_firstname: "Nicolas" } ];
@@ -155,7 +155,7 @@
       };
         try {
           
-            let responsesale = await this.$http.get("http://localhost:9000/salesapi/show/");
+            let responsesale = await this.$http.get("http://localhost:9000/salesapi/show/"+ this.$props.id);
             this.oneSale = responsesale.data;
           
           //this.oneSale = this.sale.find(sale => sale.sale_id == this.$props.id);

@@ -98,7 +98,7 @@ export default {
       if (this.$props.id === "all" || this.$props.id === "0") return;
       try {
         
-          let responseclient = await this.$http.get("http://localhost:9000/clientsapi/show/");
+          let responseclient = await this.$http.get("http://localhost:9000/clientsapi/show/"+ this.$props.id);
           this.oneClient = responseclient.data;
         
         //this.oneClient = this.client.find(client => client.client_id == this.$props.id);
