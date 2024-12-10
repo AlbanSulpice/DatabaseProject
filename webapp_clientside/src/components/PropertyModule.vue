@@ -25,13 +25,19 @@
         <tr><td>BATHROOMS</td><td>{{ oneProperty.property_bathrooms }}</td></tr>
         <tr><td>BEDROOMS</td><td>{{ oneProperty.property_bedrooms}}</td></tr>
         <tr><td>ADRESS</td><td>{{ oneProperty.property_adress}}</td></tr>
-        <tr><td>LANDLORD</td><td>
-          <select name="property_landlord" v-model="oneProperty.property_landlord" >
-              <option v-for="l of landlords" v-bind:key="l.landlord_id" :value="l.landlord_id" >
-                {{ l.landlord_surname }}
-              </option>
-            </select>
-          </td></tr>
+        <tr>
+  <td>LANDLORD</td>
+  <td>
+    <select name="property_landlord" v-model="oneProperty.property_landlord">
+      <!-- Afficher tous les landlords -->
+      <option v-for="l of landlords" 
+              v-bind:key="l.landlord_id" 
+              :value="l.landlord_id">
+        {{ l.landlord_firstname }}
+      </option>
+    </select>
+  </td>
+</tr>
       </table>
   
       <!-- For Form: /property/edit/23 -->
@@ -159,6 +165,10 @@
       }
       catch (ex) { console.log(ex); }
     }
+  },
+  getLandlordName(landlordId) {
+    const landlord = this.landlords.find(l => l.landlord_id === landlordId);
+    return landlord ? landlord.landlord_firstname : 'Unknown';
   },
     watch: {
       id: function(newVal, oldVal) {
