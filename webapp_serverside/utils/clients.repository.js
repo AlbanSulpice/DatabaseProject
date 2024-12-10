@@ -13,7 +13,7 @@ module.exports = {
         };
     },
 
-    async getAllclients(){ 
+    async getAllClients(){ 
         try {
             let sql = "SELECT * FROM clients";
             const [rows, fields] = await pool.execute(sql);

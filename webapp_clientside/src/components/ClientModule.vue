@@ -86,7 +86,7 @@ export default {
       try {
         
         let responseclients = await this.$http.get("http://localhost:9000/clientsapi/list");
-        this.client = await responseclients.json();
+        this.client = responseclients.data;
         /*
         this.client = [ { client_id: 1, client_gender: "Female", client_name: "Alice Dupuis", client_email: "alice.dupuis@example.com", client_number: "0601010101", client_taxnumber: "FR1234567890" }, { client_id: 2, client_gender: "Male", client_name: "Marc Lemoine", client_email: "marc.lemoine@example.com", client_number: "0602020202", client_taxnumber: "FR0987654321" },{ client_id: 3, client_gender: "Female", client_name: "Julie Martin", client_email: "julie.martin@example.com", client_number: "0603030303", client_taxnumber: "FR1122334455" },{ client_id: 4, client_gender: "Male", client_name: "Thomas Brun", client_email: "thomas.brun@example.com", client_number: "0604040404", client_taxnumber: "FR2233445566" },{ client_id: 5, client_gender: "Female", client_name: "Emma Lefevre", client_email: "emma.lefevre@example.com", client_number: "0605050505", client_taxnumber: "FR3344556677" } ];
         */
