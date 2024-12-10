@@ -56,18 +56,31 @@ module.exports = {
             throw err; 
         }
     },
-    async delOneAgency(agencyId){ 
+    async delOneAgency(agencyId) {
+        const connection = await pool.getConnection(); // Obtenir une connexion
         try {
-            let sql = "DELETE FROM agencies WHERE agency_id = ?";
-            const [okPacket, fields] = await pool.execute(sql, [ agencyId ]); 
+            await connection.beginTransaction(); // Commencer une transaction
+    
+            // Supprimer les ventes associées à l'agence
+            let deleteSalesSql = "DELETE FROM sales WHERE sale_agency = ?";
+            await connection.execute(deleteSalesSql, [agencyId]);
+    
+            // Supprimer l'agence
+            let deleteAgencySql = "DELETE FROM agencies WHERE agency_id = ?";
+            const [okPacket] = await connection.execute(deleteAgencySql, [agencyId]);
+    
+            await connection.commit(); // Valider la transaction
             console.log("DELETE " + JSON.stringify(okPacket));
             return okPacket.affectedRows;
-        }
-        catch (err) {
+        } catch (err) {
+            await connection.rollback(); // Annuler la transaction en cas d'erreur
             console.log(err);
-            throw err; 
+            throw err;
+        } finally {
+            connection.release(); // Libérer la connexion
         }
-    },
+    }
+    ,
     async addOneAgency(){   
         try {
             let sql = "INSERT INTO agencies (agency_id) VALUES (NULL) ";

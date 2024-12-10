@@ -56,17 +56,30 @@ module.exports = {
             throw err; 
         }
     },
-    async delOneClient(clientId){ 
+    async delOneClient(clientId) {
+        const connection = await pool.getConnection();
         try {
-            let sql = "DELETE FROM clients WHERE client_id = ?";
-            const [okPacket, fields] = await pool.execute(sql, [ clientId ]); 
+            await connection.beginTransaction();
+    
+            // Supprimer les ventes associées
+            let deleteSalesSql = "DELETE FROM sales WHERE sale_client = ?";
+            await connection.execute(deleteSalesSql, [clientId]);
+    
+            // Supprimer le client
+            let deleteClientSql = "DELETE FROM clients WHERE client_id = ?";
+            const [okPacket] = await connection.execute(deleteClientSql, [clientId]);
+    
+            await connection.commit();
             console.log("DELETE " + JSON.stringify(okPacket));
             return okPacket.affectedRows;
-        }
-        catch (err) {
+        } catch (err) {
+            await connection.rollback();
             console.log(err);
-            throw err; 
+            throw err;
+        } finally {
+            connection.release();
         }
+    
     },
     async addOneClient(){ 
         try {
@@ -87,10 +100,12 @@ module.exports = {
                   [clientGender, clientName, clientEmail, clientNumber, clientTaxNumber, clientId]); // positional parameters
             console.log("UPDATE " + JSON.stringify(okPacket));
             return okPacket.affectedRows;
-        }
-        catch (err) {
+        } catch (err) {
+            await connection.rollback();
             console.log(err);
-            throw err; 
+            throw err;
+        } finally {
+            connection.release();
         }
     }
 };

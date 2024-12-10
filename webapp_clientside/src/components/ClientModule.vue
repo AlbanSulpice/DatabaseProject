@@ -119,14 +119,21 @@ export default {
   async sendEditRequest() {
     try {
         alert("EDITING... " + this.oneClient.client_id);
+
+        // Effectuer la requête de mise à jour
         let response = await this.$http.post(
-              "http://localhost:9000/clientsapi/update/" + this.oneClient.client_id, this.oneClient);
+            "http://localhost:9000/clientsapi/update/" + this.oneClient.client_id,
+            this.oneClient
+        );
+
         alert("EDITED: " + response.data.rowsUpdated);
-        this.$router.push({ path: '/clients' });
-        this.getAllData();
-      }
-      catch (ex) { console.log(ex); }
+
+        // Redirection vers la page souhaitée
+        this.refreshOneclient();
+    } catch (ex) {
+        console.log(ex);
     }
+}
   },
   watch: {
     id: function(newVal, oldVal) {

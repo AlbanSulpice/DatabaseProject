@@ -26,9 +26,9 @@
         <tr><td>BEDROOMS</td><td>{{ oneProperty.property_bedrooms}}</td></tr>
         <tr><td>ADRESS</td><td>{{ oneProperty.property_adress}}</td></tr>
         <tr><td>LANDLORD</td><td>
-            <select name="property_landlord" v-model="oneProperty.property_landlord" >
+          <select name="property_landlord" v-model="oneProperty.property_landlord" >
               <option v-for="l of landlords" v-bind:key="l.landlord_id" :value="l.landlord_id" >
-                {{ l.landlord_firstname }}
+                {{ l.landlord_surname }}
               </option>
             </select>
           </td></tr>
@@ -104,7 +104,7 @@
           let responseproperty = await fetch("http://localhost:9000/propertiesapi/list");
           this.property = await responseproperty.json();
           let responseLandlord = await this.$http.get("http://localhost:9000/propertiesapi/landlords");
-          this.landlord = responseLandlord.data;
+          this.landlords = responseLandlord.data;
           
   
           //this.landlords = [ { landlord_id: 1, landlord_surname: "Dupont", landlord_firstname: "Pierre" }, { landlord_id: 2, landlord_surname: "Martin", landlord_firstname: "Sophie" }, { landlord_id: 3, landlord_surname: "Durand", landlord_firstname: "Lucas" },{ landlord_id: 4, landlord_surname: "Bernard", landlord_firstname: "Elodie" },{ landlord_id: 5, landlord_surname: "Lefevre", landlord_firstname: "Nicolas" } ];
