@@ -2,15 +2,16 @@
 const express = require('express');
 const router = express.Router();
 const saleRepo = require('../utils/sales.repository');
+const auth = require("../utils/users.auth");
 
 router.get('/landlords', landlordsListAction);
 router.get('/clients', clientsListAction);
 router.get('/agencies', agenciesListAction);
 router.get('/list', saleListAction);
 router.get('/show/:saleId', saleShowAction);
-router.get('/del/:saleId', saleDelAction);
-router.post('/update/:saleId', saleUpdateAction);
-router.post('/add', saleAddAction);
+router.get('/del/:saleId',auth.authorizeRequest("ADMIN"), saleDelAction);
+router.post('/update/:saleId',auth.authorizeRequest("ADMIN"), saleUpdateAction);
+router.post('/add',auth.authorizeRequest("ADMIN"), saleAddAction);
 
 // http://localhost:9000/salesapi/brands
 async function landlordsListAction(request, response) {
