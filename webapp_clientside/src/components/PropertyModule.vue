@@ -3,11 +3,10 @@
       <header id="header">
       <div id="logo-container">
         <a href="../components/HelloWorld.vue"><img src="../assets/logoPrime.png" alt="Aspire Properties Logo" id="logo"></a>
-        <h1 id="agency-name">Aspire Properties</h1>
+        <h1 id="property-name">Aspire Properties</h1>
       </div>
       <div id="auth-buttons">
-        <a href="/#/login" id="login-button">Log in</a>
-        <a href="/#/inscription" id="register-button">Register</a>
+        <a href="/#/auth" id="register-button">Log in</a>
         <a href="../components/HelloWorld.vue">Home page</a>
       </div>
     </header>
@@ -25,13 +24,19 @@
         <tr><td>BATHROOMS</td><td>{{ oneProperty.property_bathrooms }}</td></tr>
         <tr><td>BEDROOMS</td><td>{{ oneProperty.property_bedrooms}}</td></tr>
         <tr><td>ADRESS</td><td>{{ oneProperty.property_adress}}</td></tr>
-        <tr><td>LANDLORD</td><td>
-            <select name="property_landlord" v-model="oneProperty.property_landlord" >
-              <option v-for="l of landlords" v-bind:key="l.landlord_id" :value="l.landlord_id" >
-                {{ l.landlord_firstname }}
-              </option>
-            </select>
-          </td></tr>
+        <tr>
+  <td>LANDLORD</td>
+  <td>
+    <select name="property_landlord" v-model="oneProperty.property_landlord">
+      <!-- Afficher tous les landlords -->
+      <option v-for="l of landlords" 
+              v-bind:key="l.landlord_id" 
+              :value="l.landlord_id">
+        {{ l.landlord_firstname }}
+      </option>
+    </select>
+  </td>
+</tr>
       </table>
   
       <!-- For Form: /property/edit/23 -->
@@ -68,7 +73,7 @@
           <td>{{ p.property_adress}}</td>
           <td><a :href="'/#/property/show/' + p.property_id">[SHOW]</a></td>
           <td><a :href="`/#/property/edit/${p.property_id}`">[EDIT]</a></td>
-          <td><input type="button" value="DELETE" @click="sendDeleteRequest()" /></td>
+          <td><input type="button" value="DELETE" @click="sendDeleteRequest(p.property_id)" /></td>
         </tr>
       </table>
     </main>
@@ -100,78 +105,86 @@
     methods: {
       async getAllData() {
         try {
-          /*
-          let responseproperty = await this.$http.get("xxxx");
-          this.property = responseproperty.data;
-          let responseLandlord = await this.$http.get("xxxx");
-          this.landlord = responseLandlord.data;
-          */
+          
+          let responseproperty = await fetch("http://localhost:9000/propertiesapi/list");
+          this.property = await responseproperty.json();
+          let responseLandlord = await this.$http.get("http://localhost:9000/propertiesapi/landlords");
+          this.landlords = responseLandlord.data;
+          
   
-          this.landlords = [ { landlord_id: 1, landlord_surname: "Dupont", landlord_firstname: "Pierre" }, { landlord_id: 2, landlord_surname: "Martin", landlord_firstname: "Sophie" }, { landlord_id: 3, landlord_surname: "Durand", landlord_firstname: "Lucas" },{ landlord_id: 4, landlord_surname: "Bernard", landlord_firstname: "Elodie" },{ landlord_id: 5, landlord_surname: "Lefevre", landlord_firstname: "Nicolas" } ];
+          //this.landlords = [ { landlord_id: 1, landlord_surname: "Dupont", landlord_firstname: "Pierre" }, { landlord_id: 2, landlord_surname: "Martin", landlord_firstname: "Sophie" }, { landlord_id: 3, landlord_surname: "Durand", landlord_firstname: "Lucas" },{ landlord_id: 4, landlord_surname: "Bernard", landlord_firstname: "Elodie" },{ landlord_id: 5, landlord_surname: "Lefevre", landlord_firstname: "Nicolas" } ];
   
-          this.property = [ { property_id: 1, property_type: "Appartement", property_surfacearea: "75m²", property_bathrooms: 2, property_bedrooms: 3, property_adress:"10 rue de Paris, 75001 Paris", property_landlord:1 }, { property_id: 2, property_type: "Maison", property_surfacearea: "120m²", property_bathrooms: 3, property_bedrooms: 5, property_adress: "25 avenue des Champs, 75008 Paris",property_landlord:2 },{ property_id: 3, property_type: "Studio", property_surfacearea: "25m²", property_bathrooms: 1, property_bedrooms: 1, property_adress: "5 rue de Lille, 75007 Paris",property_landlord:1 },{    property_id: 4, property_type: "Villa", property_surfacearea: "200m²", property_bathrooms: 4, property_bedrooms: 6, property_adress: "15 avenue Montaigne, 75008 Paris",property_landlord:3 },{ property_id: 5, property_type: "Maison", property_surfacearea: "150m²", property_bathrooms: 3, property_bedrooms: 4, property_adress: "12 rue du Bac, 75007 Paris",property_landlord:4 },{ property_id: 6, property_type: "Appartement", property_surfacearea: "85m²", property_bathrooms: 2, property_bedrooms: 3, property_adress: "8 rue de la Paix, 75002 Paris",property_landlord:5 } ];
+          //this.property = [ { property_id: 1, property_type: "Appartement", property_surfacearea: "75m²", property_bathrooms: 2, property_bedrooms: 3, property_adress:"10 rue de Paris, 75001 Paris", property_landlord:1 }, { property_id: 2, property_type: "Maison", property_surfacearea: "120m²", property_bathrooms: 3, property_bedrooms: 5, property_adress: "25 avenue des Champs, 75008 Paris",property_landlord:2 },{ property_id: 3, property_type: "Studio", property_surfacearea: "25m²", property_bathrooms: 1, property_bedrooms: 1, property_adress: "5 rue de Lille, 75007 Paris",property_landlord:1 },{    property_id: 4, property_type: "Villa", property_surfacearea: "200m²", property_bathrooms: 4, property_bedrooms: 6, property_adress: "15 avenue Montaigne, 75008 Paris",property_landlord:3 },{ property_id: 5, property_type: "Maison", property_surfacearea: "150m²", property_bathrooms: 3, property_bedrooms: 4, property_adress: "12 rue du Bac, 75007 Paris",property_landlord:4 },{ property_id: 6, property_type: "Appartement", property_surfacearea: "85m²", property_bathrooms: 2, property_bedrooms: 3, property_adress: "8 rue de la Paix, 75002 Paris",property_landlord:5 } ];
   
           this.refreshoneProperty();
         }
         catch (ex) { console.log(ex); }
       }, 
       async refreshoneProperty() {
-        if (this.$props.id === "all" || this.$props.id === "0") return;
+        if (this.$props.id === "all" || this.$props.id === "0") {
+        this.oneProperty = {
+          property_id: 0,
+          property_type: 'xxx',
+          property_surfacearea: 'xxx',
+          property_bathrooms: 0,
+          property_bedrooms: 0,
+          property_adress: 'xxx',
+          property_landlord: 0
+        };
+        return;
+      };
         try {
-          /*
-            let responseproperty = await this.$http.get("xxxx");
+          
+            let responseproperty = await this.$http.get("http://localhost:9000/propertiesapi/show/"+ this.$props.id);
             this.oneProperty = responseproperty.data;
-          */
-          this.oneProperty = this.property.find(property => property.property_id == this.$props.id);
+          
+          //this.oneProperty = this.property.find(property => property.property_id == this.$props.id);
         }
         catch (ex) { console.log(ex); }
       },
       async addNewProperty() {
-    try {
-      // Create a new property with default values
-      const newProperty = {
-        property_id: this.property.length + 1, // Auto-increment ID based on array length
-        property_type: "New Type",
-        property_surfacearea: "0m²",
-        property_bathrooms: 0,
-        property_bedrooms: 0,
-        property_adress: "New Address",
-        property_landlord: this.landlords.length > 0 ? this.landlords[0].landlord_id : 0 // Default to the first landlord
-      };
+  try {
+    // Send a request to the backend to add a new client
+    let response = await this.$http.post("http://localhost:9000/propertiesapi/add");
 
-      // Add the new property to the local array
-      this.property.push(newProperty);
-      console.log('New property successfully added (simulation)');
-    } catch (error) {
-      console.error('Error while adding a new property (simulation):', error);
+    // Assuming the backend returns the new client ID
+    if (response.status === 201) {
+      alert(`New property added with ID: ${response.data.newPropertyId}`);
+      this.getAllData();  // Refresh the list of clients
+    } else {
+      alert("Failed to add new property.");
     }
-  },
-      async sendDeleteRequest() {
-    try {
-      // Simulate deletion by removing the property from the local array
-      this.property = this.property.filter(p => p.property_id !== this.oneProperty.property_id);
-      alert('Property successfully deleted ');
-    } catch (error) {
-      console.error('Error while deleting the property :', error);
-    }
-  },
-
-  // Function to simulate editing a property
-  async sendEditRequest() {
-    try {
-      // Simulate updating the property in the local array
-      const index = this.property.findIndex(p => p.property_id === this.oneProperty.property_id);
-      if (index !== -1) {
-        this.property[index] = { ...this.oneProperty };
-        console.log('Property successfully edited (simulation)');
-      } else {
-        console.error('Property not found for editing (simulation)');
-      }
-    } catch (error) {
-      console.error('Error while editing the property (simulation):', error);
-    }
+  } catch (ex) {
+    console.log(ex);
+    alert("An error occurred while adding the property.");
   }
+  }
+,
+      async sendDeleteRequest(propertyId) {
+      try {
+        alert("DELETING... " + propertyId);
+        let response = await this.$http.get("http://localhost:9000/propertiesapi/del/" + propertyId);
+        alert("DELETED: " + response.data.rowsDeleted);
+        this.getAllData();
+      }
+      catch (ex) { console.log(ex); }
     },
+    async sendEditRequest() {
+      try {
+        alert("EDITING... " + this.oneProperty.property_id);
+        let response = await this.$http.post(
+              "http://localhost:9000/propertiesapi/update/" + this.oneProperty.property_id, this.oneProperty);
+        alert("EDITED: " + response.data.rowsUpdated);
+        this.$router.push({ path: '/property' });
+        this.getAllData();
+      }
+      catch (ex) { console.log(ex); }
+    }
+  },
+  getLandlordName(landlordId) {
+    const landlord = this.landlords.find(l => l.landlord_id === landlordId);
+    return landlord ? landlord.landlord_firstname : 'Unknown';
+  },
     watch: {
       id: function(newVal, oldVal) {
         this.refreshoneProperty();
@@ -260,7 +273,7 @@
   margin-right: 20px;
 }
 
-#agency-name {
+#property-name {
   font-size: 2.5em;
   font-weight: bold;
   color: #fff;

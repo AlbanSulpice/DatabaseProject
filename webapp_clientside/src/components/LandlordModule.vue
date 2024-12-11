@@ -3,11 +3,10 @@
       <header id="header">
         <div id="logo-container">
           <a href="../components/HelloWorld.vue"><img src="../assets/logoPrime.png" alt="Aspire Properties Logo" id="logo"></a>
-          <h1 id="agency-name">Aspire Properties</h1>
+          <h1 id="landlord-name">Aspire Properties</h1>
         </div>
         <div id="auth-buttons">
-          <a href="/#/login" id="login-button">Log in</a>
-          <a href="/#/inscription" id="register-button">Register</a>
+          <a href="/#/auth" id="register-button">Log in</a>
           <a href="../components/HelloWorld.vue">Home page</a>
         </div>
       </header>
@@ -46,7 +45,7 @@
           <td>{{ c.landlord_firstname }}</td>
           <td><a :href="'/#/landlord/show/' + c.landlord_id">[SHOW]</a></td>
           <td><a :href="`/#/landlord/edit/${c.landlord_id}`">[EDIT]</a></td>
-          <td><input type="button" value="DELETE" @click="sendDeleteRequest()" /></td>
+          <td><input type="button" value="DELETE" @click="sendDeleteRequest(c.landlord_id)" /></td>
         </tr>
       </table>
     </main>
@@ -73,79 +72,74 @@
     methods: {
       async getAllData() {
         try {
-          /*
-          let responselandlords = await this.$http.get("xxxx");
+          
+          let responselandlords = await this.$http.get("http://localhost:9000/landlordsapi/list");
           this.landlord = responselandlords.data;
-          */
   
-          this.landlord = [ { landlord_id: 1, landlord_firstname: "Pierre", landlord_surname: "Dupont"}, { landlord_id: 2, landlord_firstname: "Sophie", landlord_surname: "Martin"},{ landlord_id: 3, landlord_firstname: "Lucas", landlord_surname: "Durant"},{ landlord_id: 4, landlord_firstname: "Elodie", landlord_surname: "Bernard"},{ landlord_id: 5, landlord_firstname: "Nicolas", landlord_surname: "Lefevre"} ];
+          //this.landlord = [ { landlord_id: 1, landlord_firstname: "Pierre", landlord_surname: "Dupont"}, { landlord_id: 2, landlord_firstname: "Sophie", landlord_surname: "Martin"},{ landlord_id: 3, landlord_firstname: "Lucas", landlord_surname: "Durant"},{ landlord_id: 4, landlord_firstname: "Elodie", landlord_surname: "Bernard"},{ landlord_id: 5, landlord_firstname: "Nicolas", landlord_surname: "Lefevre"} ];
   
           this.refreshoneLandlord();
         }
         catch (ex) { console.log(ex); }
       }, 
       async refreshoneLandlord() {
-        if (this.$props.id === "all" || this.$props.id === "0") return;
+        if (this.$props.id === "all" || this.$props.id === "0") {
+          this.oneLandlord = {
+            landlord_id: 0,
+          landlord_firstname: 'xxx',
+          landlord_surname: 'xxx'
+        };
+        return;
+        };
         try {
-          /*
-            let responselandlord = await this.$http.get("xxxx");
+          
+            let responselandlord = await this.$http.get("http://localhost:9000/landlordsapi/show/"+ this.$props.id);
             this.oneLandlord = responselandlord.data;
-          */
-          this.oneLandlord = this.landlord.find(landlord => landlord.landlord_id == this.$props.id);
+          
+          //this.oneLandlord = this.landlord.find(landlord => landlord.landlord_id == this.$props.id);
         }
         catch (ex) { console.log(ex); }
       },
       async addNewLandlord() {
+  try {
+    // Make a POST request to the backend to add a new landlord
+    const response = await this.$http.post("http://localhost:9000/landlordsapi/add");
+
+    // The response will contain the new landlord's ID
+    const newLandlordId = response.data.newLandlordId;
+
+    // Optionally, you can redirect the user to the newly created landlord's page
+    this.$router.push({ path: `/landlord/show/${newLandlordId}` });
+
+    // You can also refresh the landlord list if needed
+    this.getAllData();
+  } catch (error) {
+    console.error("Error adding new landlord:", error);
+    alert("Failed to add new landlord");
+  }
+}
+,
+    async sendDeleteRequest(landlordId) {
       try {
-        // Génération d'un nouvel ID
-        const newId = this.landlord.length ? Math.max(...this.landlord.map(landlord => landlord.landlord_id)) + 1 : 1;
-        
-        // Création d'un nouveau landlord avec les valeurs par défaut ou celles que l'utilisateur a saisies
-        const newlandlord = {
-          landlord_id: newId,
-          landlord_firstname: this.oneLandlord.landlord_firstname || "Unknown",
-          landlord_surname: this.oneLandlord.landlord_surname || "Unknown",
-        };
-        
-        // Ajout du nouveau landlord au tableau
-        this.landlord.push(newlandlord);
-        alert("New landlord added successfully!");
-  
-        // Réinitialisation de oneLandlord pour un nouveau formulaire
-        this.oneLandlord = {
-          landlord_id: 0,
-          landlord_firstname: "",
-          landlord_surname: "",
-        };
-      } catch (error) {
-        console.error("Error adding new landlord:", error);
+        alert("DELETING... " + landlordId);
+        let response = await this.$http.get("http://localhost:9000/landlordsapi/del/" + landlordId);
+        alert("DELETED: " + response.data.rowsDeleted);
+        this.getAllData();
       }
-    },
-      async sendDeleteRequest() {
-      try {
-        // Suppression dans le tableau simulé
-        this.landlord = this.landlord.filter(landlord => landlord.landlord_id !== this.oneLandlord.landlord_id);
-        alert("landlord deleted successfully!");
-        this.oneLandlord = {}; // Réinitialise l'objet oneLandlord
-      } catch (error) {
-        console.error("Error deleting landlord:", error);
-      }
+      catch (ex) { console.log(ex); }
     },
     async sendEditRequest() {
       try {
-        // Recherche et mise à jour du landlord dans le tableau simulé
-        const index = this.landlord.findIndex(landlord => landlord.landlord_id === this.oneLandlord.landlord_id);
-        if (index !== -1) {
-          this.landlord[index] = { ...this.oneLandlord };
-          alert("landlord updated successfully!");
-        } else {
-          alert("landlord not found");
-        }
-      } catch (error) {
-        console.error("Error updating landlord:", error);
+        alert("EDITING... " + this.oneLandlord.landlord_id);
+        let response = await this.$http.post(
+              "http://localhost:9000/landlordsapi/update/" + this.oneLandlord.landlord_id, this.oneLandlord);
+        alert("EDITED: " + response.data.rowsUpdated);
+        this.$router.push({ path: '/landlord' });
+        this.getAllData();
       }
+      catch (ex) { console.log(ex); }
     }
-    },
+  },
     watch: {
       id: function(newVal, oldVal) {
         this.refreshoneLandlord();
@@ -197,7 +191,7 @@
     margin-right: 20px;
   }
   
-  #agency-name {
+  #landlord-name {
     font-size: 2.5em;
     font-weight: bold;
     color: #fff;

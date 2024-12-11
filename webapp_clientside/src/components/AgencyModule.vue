@@ -6,8 +6,7 @@
         <h1 id="agency-name">Aspire Properties</h1>
       </div>
       <div id="auth-buttons">
-        <a href="/#/login" id="login-button">Log in</a>
-        <a href="/#/inscription" id="register-button">Register</a>
+        <a href="/#/auth" id="register-button">Log in</a>
         <a href="../components/HelloWorld.vue">Home page</a>
       </div>
     </header>
@@ -53,7 +52,7 @@
           <td>{{ c.agency_name }}</td>
           <td><a :href="'/#/agency/show/' + c.agency_id">[SHOW]</a></td>
           <td><a :href="`/#/agency/edit/${c.agency_id}`">[EDIT]</a></td>
-          <td><input type="button" value="DELETE" @click="sendDeleteRequest()" /></td>
+          <td><input type="button" value="DELETE" @click="sendDeleteRequest(c.agency_id)" /></td>
         </tr>
       </table>
     </main>
@@ -83,74 +82,73 @@
     methods: {
       async getAllData() {
         try {
-          /*
-          let responseagencys = await this.$http.get("xxxx");
+          let responseagencys = await this.$http.get("http://localhost:9000/agenciesapi/list");
           this.agency = responseagencys.data;
-          */
   
-          this.agency = [ { agency_id: 1, agency_name: "Agence Paris Immo", agency_adress: "50 rue de Rivoli, 75004 Paris", agency_dateofcreation: "2010-05-01", agency_numberofemployees: 50, agency_rating: 4.5 }, { agency_id: 2, agency_name: "ImmoLux", agency_adress: "22 rue Lafayette, 75009 Paris", agency_dateofcreation: "2012-07-15", agency_numberofemployees: 40, agency_rating: 4.8 },{ agency_id: 3, agency_name: "TopAgence", agency_adress: "85 avenue Foch, 75016 Paris", agency_dateofcreation: "2015-03-20", agency_numberofemployees: 30, agency_rating: 4.2 }];
+          //this.agency = [ { agency_id: 1, agency_name: "Agence Paris Immo", agency_adress: "50 rue de Rivoli, 75004 Paris", agency_dateofcreation: "2010-05-01", agency_numberofemployees: 50, agency_rating: 4.5 }, { agency_id: 2, agency_name: "ImmoLux", agency_adress: "22 rue Lafayette, 75009 Paris", agency_dateofcreation: "2012-07-15", agency_numberofemployees: 40, agency_rating: 4.8 },{ agency_id: 3, agency_name: "TopAgence", agency_adress: "85 avenue Foch, 75016 Paris", agency_dateofcreation: "2015-03-20", agency_numberofemployees: 30, agency_rating: 4.2 }];
   
           this.refreshOneagency();
         }
         catch (ex) { console.log(ex); }
       }, 
       async refreshOneagency() {
-        if (this.$props.id === "all" || this.$props.id === "0") return;
+        if (this.$props.id === "all" || this.$props.id === "0") {
+        this.oneagency = {
+          agency_id: 0,
+          agency_name: 'xxx',
+          agency_adress: 'xxx',
+          agency_dateofcreation: 'xxx',
+          agency_numberofemployees: 0,
+          agency_rating: 0
+        };
+        return;
+      };
         try {
-          /*
-            let responseagency = await this.$http.get("xxxx");
+            let responseagency = await this.$http.get("http://localhost:9000/agenciesapi/show/"+ this.$props.id);
             this.oneagency = responseagency.data;
-          */
-          this.oneagency = this.agency.find(agency => agency.agency_id == this.$props.id);
+          //this.oneagency = this.agency.find(agency => agency.agency_id == this.$props.id);
         }
         catch (ex) { console.log(ex); }
       },
       async addNewAgency() {
   try {
-    // Créez un nouvel objet pour l'agence avec des valeurs par défaut
-    const newAgency = {
-      agency_id: this.agency.length + 1, // Générez un nouvel ID basé sur la longueur actuelle du tableau
-      agency_name: 'New Agency',
-      agency_adress: 'Adress to define',
-      agency_dateofcreation: new Date().toISOString().split('T')[0], // Date actuelle au format AAAA-MM-JJ
-      agency_numberofemployees: 0,
-      agency_rating: 0
-    };
+    // Send a request to the backend to add a new client
+    let response = await this.$http.post("http://localhost:9000/agenciesapi/add");
 
-    // Ajoutez la nouvelle agence au tableau simulé
-    this.agency.push(newAgency);
-
-    // Affichez un message de confirmation
-    alert("New agency added with success !");
-  } catch (error) {
-    console.error("Error when adding of the new agency :", error);
+    // Assuming the backend returns the new client ID
+    if (response.status === 201) {
+      alert(`New agency added with ID: ${response.data.newAgencyId}`);
+      this.getAllData();  // Refresh the list of clients
+    } else {
+      alert("Failed to add new agency.");
+    }
+  } catch (ex) {
+    console.log(ex);
+    alert("An error occurred while adding the client.");
   }
-},
-    async sendDeleteRequest() {
-    try {
-      // Suppression dans le tableau simulé
-      this.agency = this.agency.filter(agency => agency.agency_id !== this.oneagency.agency_id);
-      alert("Agency deleted successfully!");
-      this.oneagency = {}; // Réinitialise l'objet oneagency
-    } catch (error) {
-      alert("Error deleting Agency:", error);
+  }
+,
+async sendDeleteRequest(agencyId) {
+      try {
+        alert("DELETING... " + agencyId);
+        let response = await this.$http.get("http://localhost:9000/agenciesapi/del/" + agencyId);
+        alert("DELETED: " + response.data.rowsDeleted);
+        this.getAllData();
+      }
+      catch (ex) { console.log(ex); }
+    },
+    async sendEditRequest() {
+      try {
+        alert("EDITING... " + this.oneagency.agency_id);
+        let response = await this.$http.post(
+              "http://localhost:9000/agenciesapi/update/" + this.oneagency.agency_id, this.oneagency);
+        alert("EDITED: " + response.data.rowsUpdated);
+        this.$router.push({ path: '/agency' });
+        this.getAllData();
+      }
+      catch (ex) { console.log(ex); }
     }
   },
-  async sendEditRequest() {
-    try {
-      // Recherche et mise à jour du client dans le tableau simulé
-      const index = this.agency.findIndex(agency => agency.agency_id === this.oneagency.agency_id);
-      if (index !== -1) {
-        this.agency[index] = { ...this.oneagency };
-        alert("Agency updated successfully!");
-      } else {
-        console.error("Agency not found");
-      }
-    } catch (error) {
-      console.error("Error updating Agency:", error);
-    }
-  }
-    },
     watch: {
       id: function(newVal, oldVal) {
         this.refreshOneagency();

@@ -6,8 +6,7 @@
         <h1 id="agency-name">Aspire Properties</h1>
       </div>
       <div id="auth-buttons">
-        <a href="/#/login" id="login-button">Log in</a>
-        <a href="/#/inscription" id="register-button">Register</a>
+        <a href="/#/auth" id="register-button">Log in</a>
         <a href="../components/HelloWorld.vue">Home page</a>
       </div>
     </header>
@@ -54,7 +53,7 @@
         <td>{{ c.client_name }}</td>
         <td><a :href="'/#/client/show/' + c.client_id">[SHOW]</a></td>
         <td><a :href="`/#/client/edit/${c.client_id}`">[EDIT]</a></td>
-        <td><input type="button" value="DELETE" @click="sendDeleteRequest()" /></td>
+        <td><input type="button" value="DELETE" @click="sendDeleteRequest(c.client_id)" /></td>
       </tr>
     </table>
   </main>
@@ -84,13 +83,12 @@ export default {
   methods: {
     async getAllData() {
       try {
-        /*
-        let responseclients = await this.$http.get("xxxx");
+        
+        let responseclients = await this.$http.get("http://localhost:9000/clientsapi/list");
         this.client = responseclients.data;
-        */
-
+        /*
         this.client = [ { client_id: 1, client_gender: "Female", client_name: "Alice Dupuis", client_email: "alice.dupuis@example.com", client_number: "0601010101", client_taxnumber: "FR1234567890" }, { client_id: 2, client_gender: "Male", client_name: "Marc Lemoine", client_email: "marc.lemoine@example.com", client_number: "0602020202", client_taxnumber: "FR0987654321" },{ client_id: 3, client_gender: "Female", client_name: "Julie Martin", client_email: "julie.martin@example.com", client_number: "0603030303", client_taxnumber: "FR1122334455" },{ client_id: 4, client_gender: "Male", client_name: "Thomas Brun", client_email: "thomas.brun@example.com", client_number: "0604040404", client_taxnumber: "FR2233445566" },{ client_id: 5, client_gender: "Female", client_name: "Emma Lefevre", client_email: "emma.lefevre@example.com", client_number: "0605050505", client_taxnumber: "FR3344556677" } ];
-
+        */
         this.refreshOneclient();
       }
       catch (ex) { console.log(ex); }
@@ -98,70 +96,58 @@ export default {
     async refreshOneclient() {
       if (this.$props.id === "all" || this.$props.id === "0") return;
       try {
-        /*
-          let responseclient = await this.$http.get("xxxx");
+        
+          let responseclient = await this.$http.get("http://localhost:9000/clientsapi/show/"+ this.$props.id);
           this.oneClient = responseclient.data;
-        */
-        this.oneClient = this.client.find(client => client.client_id == this.$props.id);
+        
+        //this.oneClient = this.client.find(client => client.client_id == this.$props.id);
       }
       catch (ex) { console.log(ex); }
     },
     async addNewClient() {
-    try {
-      // Génération d'un nouvel ID
-      const newId = this.client.length ? Math.max(...this.client.map(client => client.client_id)) + 1 : 1;
-      
-      // Création d'un nouveau client avec les valeurs par défaut ou celles que l'utilisateur a saisies
-      const newClient = {
-        client_id: newId,
-        client_gender: this.oneClient.client_gender || "Unknown",
-        client_name: this.oneClient.client_name || "New Client",
-        client_email: this.oneClient.client_email || "new@example.com",
-        client_number: this.oneClient.client_number || "0000000000",
-        client_taxnumber: this.oneClient.client_taxnumber || "FR0000000000"
-      };
-      
-      // Ajout du nouveau client au tableau
-      this.client.push(newClient);
-      alert("New client added successfully!");
+  try {
+    // Send a request to the backend to add a new client
+    let response = await this.$http.post("http://localhost:9000/clientsapi/add");
 
-      // Réinitialisation de oneClient pour un nouveau formulaire
-      this.oneClient = {
-        client_id: 0,
-        client_gender: "",
-        client_name: "",
-        client_email: "",
-        client_number: "",
-        client_taxnumber: ""
-      };
-    } catch (error) {
-      console.error("Error adding new client:", error);
+    // Assuming the backend returns the new client ID
+    if (response.status === 201) {
+      alert(`New client added with ID: ${response.data.newClientId}`);
+      this.getAllData();  // Refresh the list of clients
+    } else {
+      alert("Failed to add new client.");
     }
+  } catch (ex) {
+    console.log(ex);
+    alert("An error occurred while adding the client.");
+  }
   },
-    async sendDeleteRequest() {
-    try {
-      // Suppression dans le tableau simulé
-      this.client = this.client.filter(client => client.client_id !== this.oneClient.client_id);
-      alert("Client deleted successfully!");
-      this.oneClient = {}; // Réinitialise l'objet oneClient
-    } catch (error) {
-      console.error("Error deleting client:", error);
-    }
+    async sendDeleteRequest(clientId) {
+      try {
+        alert("DELETING... " + clientId);
+        let response = await this.$http.get("http://localhost:9000/clientsapi/del/" + clientId);
+        alert("DELETED: " + response.data.rowsDeleted);
+        this.getAllData();
+      }
+      catch (ex) { console.log(ex); }
   },
   async sendEditRequest() {
     try {
-      // Recherche et mise à jour du client dans le tableau simulé
-      const index = this.client.findIndex(client => client.client_id === this.oneClient.client_id);
-      if (index !== -1) {
-        this.client[index] = { ...this.oneClient };
-        alert("Client updated successfully!");
-      } else {
-        alert("Client not found");
-      }
-    } catch (error) {
-      console.error("Error updating client:", error);
+        alert("EDITING... " + this.oneClient.client_id);
+
+        // Effectuer la requête de mise à jour
+        let response = await this.$http.post(
+            "http://localhost:9000/clientsapi/update/" + this.oneClient.client_id,
+            this.oneClient
+        );
+
+        alert("EDITED: " + response.data.rowsUpdated);
+
+        // Redirection vers la page souhaitée
+        this.refreshOneclient();
+    } catch (ex) {
+        console.log(ex);
     }
-  }
+}
   },
   watch: {
     id: function(newVal, oldVal) {

@@ -31,11 +31,11 @@ app.use(session({
 
 // enable Cross Origin Resource Sharing (needed for cross-origin API)
 const cors = require('cors');
-app.use(cors());
-
+//app.use(cors());
+app.use(cors({ origin: "http://localhost:8080", credentials: true, methods: [ 'GET', 'POST' ] })); // PASSPORT
 // configure passport
-// const auth = require("./utils/users.auth");
-// auth.initializeAuthentications(app);
+ const auth = require("./utils/users.auth");
+ auth.initializeAuthentications(app);
 
 // *** ROUTES/CONTROLLERS ***
 
@@ -49,9 +49,9 @@ app.get('/', (request, response) => { // 'GET' as a HTTP VERB, not as a 'getter'
 // setup additional routes
 // app.use(routeBase, callback);
 app.use("/static", express.static(__dirname + '/static'));
-app.use("/carsapi", require("./controllers/clientsapi.route"));
-app.use("/carsapi", require("./controllers/agenciesapi.route"));
-app.use("/carsapi", require("./controllers/landlordsapi.route"));
-app.use("/carsapi", require("./controllers/propertiesapi.route"));
-app.use("/carsapi", require("./controllers/salesapi.route"));
+app.use("/clientsapi", require("./controllers/clientsapi.route"));
+app.use("/agenciesapi", require("./controllers/agenciesapi.route"));
+app.use("/landlordsapi", require("./controllers/landlordsapi.route"));
+app.use("/propertiesapi", require("./controllers/propertiesapi.route"));
+app.use("/salesapi", require("./controllers/salesapi.route"));
 // app.use("/auth", require("./controllers/auth.route"));

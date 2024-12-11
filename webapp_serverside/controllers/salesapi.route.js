@@ -4,21 +4,22 @@ const router = express.Router();
 const saleRepo = require('../utils/sales.repository');
 
 router.get('/landlords', landlordsListAction);
-router.get('/properties', propertiesListAction);
+router.get('/clients', clientsListAction);
 router.get('/agencies', agenciesListAction);
 router.get('/list', saleListAction);
 router.get('/show/:saleId', saleShowAction);
 router.get('/del/:saleId', saleDelAction);
 router.post('/update/:saleId', saleUpdateAction);
+router.post('/add', saleAddAction);
 
 // http://localhost:9000/salesapi/brands
 async function landlordsListAction(request, response) {
     var landlords = await saleRepo.getAllLandlords();
     response.send(JSON.stringify(landlords));
 }
-async function propertiesListAction(request, response) {
-    var properties = await saleRepo.getAllProperties();
-    response.send(JSON.stringify(properties));
+async function clientsListAction(request, response) {
+    var clients = await saleRepo.getAllClients();
+    response.send(JSON.stringify(clients));
 }
 async function agenciesListAction(request, response) {
     var agencies = await saleRepo.getAllAgencies();
@@ -43,15 +44,25 @@ async function saleUpdateAction(request, response) {
     // console.log(json);
     // TODO: !!! INPUT VALIDATION !!!
     var saleId = request.params.saleId;
-    if (saleId==="0") saleId = await saleRepo.addOneSale(request.body.sale_landlord, request.body.sale_property, request.body.sale_agency); 
+    if (saleId==="0") saleId = await saleRepo.addOneSale(request.body.sale_landlord, request.body.sale_client, request.body.sale_agency); 
     var numRows = await saleRepo.editOneSale(saleId, 
         request.body.sale_amount, 
         request.body.sale_comission, 
         request.body.sale_landlord, 
-        request.body.sale_property, 
+        request.body.sale_client, 
         request.body.sale_agency);
     let result = { rowsUpdated: numRows };
     response.send(JSON.stringify(result));
 }
+async function saleAddAction(request, response) {
+    try {
+        const newSaleId = await saleRepo.addOneSale();
 
+        let result = { newSaleId };
+        response.status(201).send(JSON.stringify(result));
+    } catch (error) {
+        console.error("Error adding new sale:", error);
+        response.status(500).send({ error: "Failed to add sale" });
+    }
+}
 module.exports = router;

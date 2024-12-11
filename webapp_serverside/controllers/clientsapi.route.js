@@ -7,6 +7,7 @@ router.get('/list', clientListAction);
 router.get('/show/:clientID', clientShowAction);
 router.get('/del/:clientID', clientDelAction);
 router.post('/update/:clientID', clientUpdateAction);
+router.post('/add', clientAddAction);
 
 async function clientListAction(request, response) {
     var clients = await clientRepo.getAllClients();
@@ -38,5 +39,17 @@ async function clientUpdateAction(request, response) {
     let result = { rowsUpdated: numRows };
     response.send(JSON.stringify(result));
 }
+async function clientAddAction(request, response) {
+    try {
+        // Ajoute un client et récupère son ID
+        const newClientId = await clientRepo.addOneClient();
 
+        // Retourne une réponse avec l'ID du nouveau client
+        let result = { newClientId };
+        response.status(201).send(JSON.stringify(result));
+    } catch (error) {
+        console.error("Error adding new client:", error);
+        response.status(500).send({ error: "Failed to add client" });
+    }
+}
 module.exports = router;

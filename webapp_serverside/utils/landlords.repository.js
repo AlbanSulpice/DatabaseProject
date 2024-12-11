@@ -52,18 +52,35 @@ module.exports = {
             throw err; 
         }
     },
-    async delOneLandlord(landlordId){ 
+    async delOneLandlord(landlordId) {
+        const connection = await pool.getConnection(); // Obtenir une connexion
         try {
-            let sql = "DELETE FROM landlords WHERE landlord_id = ?";
-            const [okPacket, fields] = await pool.execute(sql, [ landlordId ]); 
+            await connection.beginTransaction(); // Commencer une transaction
+    
+            // Supprimer les ventes associées au landlord
+            let deleteSalesSql = "DELETE FROM sales WHERE sale_landlord = ?";
+            await connection.execute(deleteSalesSql, [landlordId]);
+    
+            // Supprimer les propriétés associées au landlord
+            let deletePropertiesSql = "DELETE FROM properties WHERE property_landlord = ?";
+            await connection.execute(deletePropertiesSql, [landlordId]);
+    
+            // Supprimer le landlord
+            let deleteLandlordSql = "DELETE FROM landlords WHERE landlord_id = ?";
+            const [okPacket] = await connection.execute(deleteLandlordSql, [landlordId]);
+    
+            await connection.commit(); // Valider la transaction
             console.log("DELETE " + JSON.stringify(okPacket));
             return okPacket.affectedRows;
-        }
-        catch (err) {
+        } catch (err) {
+            await connection.rollback(); // Annuler la transaction en cas d'erreur
             console.log(err);
-            throw err; 
+            throw err;
+        } finally {
+            connection.release(); // Libérer la connexion
         }
-    },
+    }
+    ,
     async addOneLandlord(){ 
         try {
             let sql = "INSERT INTO landlords (landlord_id) VALUES (NULL) ";

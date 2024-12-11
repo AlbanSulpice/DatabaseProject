@@ -8,6 +8,7 @@ router.get('/list', propertyListAction);
 router.get('/show/:propertyId', propertyShowAction);
 router.get('/del/:propertyId', propertyDelAction);
 router.post('/update/:propertyId', propertyUpdateAction);
+router.post('/add', propertyAddAction);
 
 // http://localhost:9000/propertiesapi/landlords
 async function landlordListAction(request, response) {
@@ -45,5 +46,15 @@ async function propertyUpdateAction(request, response) {
     let result = { rowsUpdated: numRows };
     response.send(JSON.stringify(result));
 }
+async function propertyAddAction(request, response) {
+    try {
+        const newPropertyId = await propertyRepo.addOneProperty();
 
+        let result = { newPropertyId };
+        response.status(201).send(JSON.stringify(result));
+    } catch (error) {
+        console.error("Error adding new property:", error);
+        response.status(500).send({ error: "Failed to add property" });
+    }
+}
 module.exports = router;

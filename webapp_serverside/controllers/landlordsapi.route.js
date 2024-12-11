@@ -7,6 +7,7 @@ router.get('/list', landlordListAction);
 router.get('/show/:landlordId', landlordShowAction);
 router.get('/del/:landlordId', landlordDelAction);
 router.post('/update/:landlordId', landlordUpdateAction);
+router.post('/add', landlordAddAction);
 
 async function landlordListAction(request, response) {
     var landlords = await landlordRepo.getAllLandlords();
@@ -34,5 +35,15 @@ async function landlordUpdateAction(request, response) {
     let result = { rowsUpdated: numRows };
     response.send(JSON.stringify(result));
 }
+async function landlordAddAction(request, response) {
+    try {
+        const newLandlordId = await landlordRepo.addOneLandlord();
 
+        let result = { newLandlordId };
+        response.status(201).send(JSON.stringify(result));
+    } catch (error) {
+        console.error("Error adding new landlord:", error);
+        response.status(500).send({ error: "Failed to add landlord" });
+    }
+}
 module.exports = router;

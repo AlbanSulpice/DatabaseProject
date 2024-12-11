@@ -7,6 +7,7 @@ router.get('/list', agencyListAction);
 router.get('/show/:agencyId', agencyShowAction);
 router.get('/del/:agencyId', agencyDelAction);
 router.post('/update/:agencyId', agencyUpdateAction);
+router.post('/add', agencyAddAction);
 
 async function agencyListAction(request, response) {
     var agencies = await agencyRepo.getAllAgencies();
@@ -37,5 +38,17 @@ async function agencyUpdateAction(request, response) {
     let result = { rowsUpdated: numRows };
     response.send(JSON.stringify(result));
 }
+async function agencyAddAction(request, response) {
+    try {
+        // Ajoute un agency et récupère son ID
+        const newAgencyId = await agencyRepo.addOneAgency();
 
+        // Retourne une réponse avec l'ID du nouveau agency
+        let result = { newAgencyId };
+        response.status(201).send(JSON.stringify(result));
+    } catch (error) {
+        console.error("Error adding new agency:", error);
+        response.status(500).send({ error: "Failed to add agency" });
+    }
+}
 module.exports = router;

@@ -5,7 +5,7 @@ module.exports = {
     getBlankClient(){ // defines the entity model
         return {
             "client_id": 0,
-            "client_gender": "XXXX",
+            "client_gender": "M",
             "client_name": "XXXX",
             "client_email": "XXXX",
             "client_number": "XXXX",
@@ -13,7 +13,7 @@ module.exports = {
         };
     },
 
-    async getAllclients(){ 
+    async getAllClients(){ 
         try {
             let sql = "SELECT * FROM clients";
             const [rows, fields] = await pool.execute(sql);
@@ -56,30 +56,56 @@ module.exports = {
             throw err; 
         }
     },
-    async delOneClient(clientId){ 
+    async delOneClient(clientId) {
+        const connection = await pool.getConnection();
         try {
-            let sql = "DELETE FROM clients WHERE client_id = ?";
-            const [okPacket, fields] = await pool.execute(sql, [ clientId ]); 
+            await connection.beginTransaction();
+    
+            // Supprimer les ventes associées
+            let deleteSalesSql = "DELETE FROM sales WHERE sale_client = ?";
+            await connection.execute(deleteSalesSql, [clientId]);
+    
+            // Supprimer le client
+            let deleteClientSql = "DELETE FROM clients WHERE client_id = ?";
+            const [okPacket] = await connection.execute(deleteClientSql, [clientId]);
+    
+            await connection.commit();
             console.log("DELETE " + JSON.stringify(okPacket));
             return okPacket.affectedRows;
-        }
-        catch (err) {
+        } catch (err) {
+            await connection.rollback();
             console.log(err);
-            throw err; 
+            throw err;
+        } finally {
+            connection.release();
         }
+    
     },
-    async addOneClient(){ 
+    async addOneClient() {
+        let connection;
         try {
-            let sql = "INSERT INTO clients (client_id) VALUES (NULL) ";
-            const [okPacket, fields] = await pool.execute(sql); 
+            connection = await pool.getConnection(); // Obtenir une connexion du pool
+    
+            // Insérer un client avec tous les champs à NULL (puisque les colonnes acceptent NULL)
+            let sqlInsert = `INSERT INTO clients (client_gender, client_name, client_email, client_number, client_taxnumber) 
+                             VALUES (?, ?, ?, ?, ?)`;
+    
+            // Exécution de la requête avec NULL pour tous les champs
+            const [okPacket] = await connection.execute(sqlInsert, [null, null, null, null, null]);
+    
             console.log("INSERT " + JSON.stringify(okPacket));
-            return okPacket.insertId;
-        }
-        catch (err) {
+            
+            // Retourner l'ID généré automatiquement pour ce client
+            return okPacket.insertId; 
+    
+        } catch (err) {
             console.log(err);
-            throw err; 
+            throw err;
+        } finally {
+            if (connection) connection.release(); // Libérer la connexion
         }
-    },
+    }
+    ,
     async editOneClient(clientId, clientGender, clientName, clientEmail, clientNumber, clientTaxNumber){ 
         try {
             let sql = "UPDATE clients SET client_gender=?, client_name=?, client_email=?, client_number=?, client_taxnumber=? WHERE client_id=? "; // positional parameters
@@ -87,10 +113,9 @@ module.exports = {
                   [clientGender, clientName, clientEmail, clientNumber, clientTaxNumber, clientId]); // positional parameters
             console.log("UPDATE " + JSON.stringify(okPacket));
             return okPacket.affectedRows;
-        }
-        catch (err) {
+        } catch (err) {
             console.log(err);
-            throw err; 
+            throw err;
         }
     }
 };
