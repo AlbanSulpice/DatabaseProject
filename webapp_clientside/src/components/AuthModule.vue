@@ -15,7 +15,7 @@
       </div>
       <input type="button" @click="handleLogin()" value="Log in"/>
       <input type="button" @click="sendRequest('get', 'logout')" value="LOGOUT" />
-      <p>Pas de compte ? <a href="#" @click="toggleMode">S'enregistrer</a></p>
+      <p>No account ? <a href="#" @click="toggleMode">Register</a></p>
     </div>
 
     <!-- Formulaire d'inscription -->
@@ -34,7 +34,7 @@
       </div>
       <input type="button" @click="handleRegister()" value="Sign up"/>
       <input type="button" @click="sendRequest('get', 'logout')" value="LOGOUT" />
-      <p>Déjà un compte ? <a href="#" @click="toggleMode">Se connecter</a></p>
+      <p>Already an account? <a href="#" @click="toggleMode">Log in</a></p>
     </div>
     <!-- <input type="button" @click="sendRequest('post', 'login', { username: 'joeuser', userpass: 'joepass' })" value="LOGIN USER" />
     <input type="button" @click="sendRequest('post', 'login', { username: 'joeadmin', userpass: 'joepass' })" value="LOGIN ADMIN" />
@@ -107,95 +107,115 @@ export default {
 }
 </script>
 <style scoped>
-* {
+/* Style global */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-  font-family: 'Arial', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Prend toute la hauteur de la fenêtre */
+  width: 100vw; /* Prend toute la largeur de la fenêtre */
+  box-sizing: border-box; /* Assure que le padding et margin ne cassent pas la mise en page */
 }
 
-/* Background Style */
+/* Conteneur principal */
 .hello {
-  background-color: #f0f0f0;
-  color: #333;
+  width: 100%;
+  max-width: 500px; /* Limite la largeur du formulaire */
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100vh;
-  padding: 20px;
+  justify-content: center; /* Ajoute cette propriété pour centrer aussi verticalement */
 }
 
+/* Titre */
 h1 {
-  font-size: 3em;
-  color: #333;
+  color: #2c3e50;
   margin-bottom: 20px;
-  text-transform: uppercase;
-  font-weight: 700;
 }
 
-p {
-  font-size: 1.2em;
-  color: #666;
-  margin-bottom: 40px;
-  text-align: center;
-}
-
-/* Style des boutons de connexion */
-input[type="button"] {
-  padding: 15px 25px;
-  background-color: #1aff00;
-  color: white;
-  font-size: 1.2em;
-  border: none;
-  border-radius: 5px;
-  margin: 10px 0;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-input[type="button"]:hover {
-  background-color: #00e608;
-  transform: translateY(-2px);
-}
-
-input[type="button"]:active {
-  background-color: #00b303;
-  transform: translateY(2px);
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  h1 {
-    font-size: 2.5em;
-  }
-
-  p {
-    font-size: 1.1em;
-  }
-
-  input[type="button"] {
-    font-size: 1em;
-    padding: 12px 20px;
-  }
-}
-/* Style pour le lien Home page */
+/* Liens */
 a {
-  display: inline-block;
+  color: #27ae60;
   text-decoration: none;
-  color: #1aff00;
-  font-size: 1.2em;
-  font-weight: 500;
-  padding: 10px 15px;
-  border: 2px solid #1aff00;
-  border-radius: 5px;
-  transition: all 0.3s ease;
+  font-weight: bold;
 }
 
 a:hover {
-  background-color: #1aff00;
-  color: white;
-  transform: translateY(-5px);
+  text-decoration: underline;
 }
 
+/* Formulaire */
+.form-group {
+  margin-bottom: 15px;
+  text-align: left;
+  width: 100%;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 5px;
+}
+
+input[type="text"], input[type="password"], input[type="email"] {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+input[type="button"] {
+  width: 100%;
+  padding: 12px;
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 10px 0;
+  transition: background-color 0.3s;
+}
+
+input[type="button"]:hover {
+  background-color: #2ecc71;
+}
+
+/* Formulaire d'inscription et connexion */
+p {
+  color: #2c3e50;
+}
+
+input[type="button"]:first-of-type {
+  margin-top: 20px;
+}
+
+/* Gestion des états d'affichage */
+input[type="button"]:nth-of-type(2) {
+  background-color: #e74c3c;
+}
+
+input[type="button"]:nth-of-type(2):hover {
+  background-color: #c0392b;
+}
+
+/* Message d'erreur ou succès */
+.msg {
+  margin-top: 20px;
+  color: #e74c3c;
+  font-weight: bold;
+}
 </style>
