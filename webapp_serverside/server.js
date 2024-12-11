@@ -54,4 +54,4 @@ app.use("/agenciesapi", require("./controllers/agenciesapi.route"));
 app.use("/landlordsapi", require("./controllers/landlordsapi.route"));
 app.use("/propertiesapi", require("./controllers/propertiesapi.route"));
 app.use("/salesapi", require("./controllers/salesapi.route"));
-// app.use("/auth", require("./controllers/auth.route"));
+app.use("/auth", require("./controllers/auth.route"));

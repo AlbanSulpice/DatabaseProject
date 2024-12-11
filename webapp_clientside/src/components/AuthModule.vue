@@ -1,22 +1,64 @@
 <template>
   <div class="hello">
-    <h1>Log in</h1>
+    <h1>Aspire Properties account</h1>
     <a href="../components/HelloWorld.vue">Home page</a>
     <p>{{ msg }}</p>
-    <input type="button" @click="sendRequest('post', 'login', { username: 'joeuser', userpass: 'joeXXX' })" value="LOGIN BAD" />
-    <input type="button" @click="sendRequest('post', 'login', { username: 'joeuser', userpass: 'joepass' })" value="LOGIN USER" />
+        <!-- Formulaire de connexion -->
+    <div v-if="isLogin">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      <input type="button" @click="handleLogin()" value="Log in"/>
+      <input type="button" @click="sendRequest('get', 'logout')" value="LOGOUT" />
+      <p>Pas de compte ? <a href="#" @click="toggleMode">S'enregistrer</a></p>
+    </div>
+
+    <!-- Formulaire d'inscription -->
+    <div v-else>
+      <div class="form-group">
+        <label for="newUsername">Username</label>
+        <input type="text" id="newUsername" v-model="newUser.username" required>
+      </div>
+      <div class="form-group">
+        <label for="newPassword">Password</label>
+        <input type="password" id="newPassword" v-model="newUser.password" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" v-model="newUser.email" required>
+      </div>
+      <input type="button" @click="handleRegister()" value="Sign up"/>
+      <input type="button" @click="sendRequest('get', 'logout')" value="LOGOUT" />
+      <p>Déjà un compte ? <a href="#" @click="toggleMode">Se connecter</a></p>
+    </div>
+    <!-- <input type="button" @click="sendRequest('post', 'login', { username: 'joeuser', userpass: 'joepass' })" value="LOGIN USER" />
     <input type="button" @click="sendRequest('post', 'login', { username: 'joeadmin', userpass: 'joepass' })" value="LOGIN ADMIN" />
     <input type="button" @click="sendRequest('get', 'user')" value="ACCESS /user" />
     <input type="button" @click="sendRequest('get', 'admin')" value="ACCESS /admin" />
     <input type="button" @click="sendRequest('get', 'protected')" value="ACCESS /protected" />
-    <input type="button" @click="sendRequest('get', 'logout')" value="LOGOUT" />
+    <input type="button" @click="sendRequest('get', 'logout')" value="LOGOUT" /> -->
   </div>
 </template>
 
 <script>
 export default {
   name: 'AuthenticationDemo',
-  
+  data () {
+    return {
+      isLogin: true,
+      msg: 'Welcome to Your Vue.js App',
+      newUser: {
+        username: '',
+        password: '',
+        email: ''
+      }
+    }
+  },
   methods: {
     async sendRequest(method, endpoint, params) {
       try {
@@ -29,9 +71,39 @@ export default {
       } catch (error) {
         console.log(error);
       }
-    }
-  },
+    },
+    async handleLogin() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
 
+            // Appelez votre fonction sendRequest ici
+            this.sendRequest('post', 'login', { username: username, userpass: password });
+        },
+      async  toggleMode() {
+      this.isLogin = !this.isLogin; // Change l'état pour afficher l'autre formulaire
+    },
+    async sendRequest(method, endpoint, params) {
+      try {
+        let response = null;
+        if (method === "post") 
+          response = await this.$http.post("http://localhost:9000/auth/" + endpoint, params);
+        else
+          response = await this.$http.get("http://localhost:9000/auth/" + endpoint);
+        this.msg = JSON.stringify(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async handleRegister() {
+      const { username, password, email } = this.newUser;
+      if (username && password && email) {
+        this.sendRequest('post', 'register', { username, password, email });
+        this.toggleMode(); // Retourne au mode login après inscription
+      } else {
+        alert("Complete all the fields !");
+      }
+    }
+  }
 }
 </script>
 <style scoped>
