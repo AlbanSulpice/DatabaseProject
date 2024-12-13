@@ -42,5 +42,14 @@ module.exports = {
       console.log(err);
       throw err;
     }
+  },
+  async createUser(user, password) {
+    const query = `
+      INSERT INTO users (user_name, user_email, user_role, user_pass, user_created)
+      VALUES (?, ?, ?, SHA2(CONCAT(NOW(), ?), 224), NOW())`; // Utilisation de SHA2 et NOW() dans la requête SQL
+  
+    // On passe le mot de passe comme paramètre pour le placeholder '?'
+    const [result] = await pool.execute(query, [user.user_name, user.user_email, user.user_role, password]);
+    return result;
   }
 }; 

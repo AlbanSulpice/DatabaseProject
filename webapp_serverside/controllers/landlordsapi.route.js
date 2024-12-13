@@ -2,12 +2,13 @@
 const express = require('express');
 const router = express.Router();
 const landlordRepo = require('../utils/landlords.repository');
+const auth = require("../utils/users.auth");
 
 router.get('/list', landlordListAction);
 router.get('/show/:landlordId', landlordShowAction);
-router.get('/del/:landlordId', landlordDelAction);
-router.post('/update/:landlordId', landlordUpdateAction);
-router.post('/add', landlordAddAction);
+router.get('/del/:landlordId',auth.authorizeRequest("ADMIN"), landlordDelAction);
+router.post('/update/:landlordId',auth.authorizeRequest("ADMIN"), landlordUpdateAction);
+router.post('/add',auth.authorizeRequest("ADMIN"), landlordAddAction);
 
 async function landlordListAction(request, response) {
     var landlords = await landlordRepo.getAllLandlords();

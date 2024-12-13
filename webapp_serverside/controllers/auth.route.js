@@ -12,6 +12,7 @@ router.get("/admin", auth.authorizeRequest("ADMIN"), userdataAction); // expose 
 router.get("/protected", protectedGetAction); // execute authorization in action method: needed for resource-based auth
 router.post("/login", loginPostAction);
 router.get("/logout", logoutAction);
+router.post("/register", registerAction);
 
 // use same endpoints for both roles
 async function userdataAction(request, response) {
@@ -65,6 +66,49 @@ function logoutAction(request, response) {
     }
     response.send(JSON.stringify(resultObject));
   });
+}
+async function registerAction(request, response) {
+  const { username, email, password } = request.body;
+
+  // Vérification si tous les champs sont présents
+  if (!username || !email || !password) {
+    return response.status(400).json({ error: "All fields are required" });
+  }
+
+  try {
+    // Vérifier si un utilisateur existe déjà avec cet e-mail
+    const existingUser = await userRepo.getOneUser(username);
+    if (existingUser) {
+      return response.status(400).json({ error: "User with this email already exists" });
+    }
+
+    // Insertion dans la base de données avec NOW() de SQL pour l'attribut user_created
+    const newUser = {
+      user_name: username,
+      user_email: email,
+      user_role: 'USER',  // Le rôle par défaut est 'USER'
+      user_pass: 'sha2(concat(NOW(), ?), 224)',
+      // Nous utilisons 'NOW()' directement dans la requête SQL, donc aucun besoin de générer la date en JavaScript
+      user_created: 'NOW()'
+    };
+
+    // Ajout du nouvel utilisateur dans la base de données
+    const result = await userRepo.createUser(newUser, password); // À implémenter dans le fichier `users.repository.js`
+
+    // Réponse après l'insertion
+    response.status(201).json({
+      message: "User registered successfully",
+      user: {
+        user_id: result.insertId,  // Si vous utilisez MySQL et l'insertion génère un `user_id` auto-incrémenté
+        user_name: newUser.user_name,
+        user_email: newUser.user_email,
+        user_role: newUser.user_role,
+      }
+    });
+  } catch (error) {
+    console.error("Error during registration:", error);
+    response.status(500).json({ error: "Internal server error" });
+  }
 }
 
 module.exports = router;

@@ -2,12 +2,13 @@
 const express = require('express');
 const router = express.Router();
 const agencyRepo = require('../utils/agencies.repository');
+const auth = require("../utils/users.auth");
 
 router.get('/list', agencyListAction);
 router.get('/show/:agencyId', agencyShowAction);
-router.get('/del/:agencyId', agencyDelAction);
-router.post('/update/:agencyId', agencyUpdateAction);
-router.post('/add', agencyAddAction);
+router.get('/del/:agencyId',auth.authorizeRequest("ADMIN"), agencyDelAction);
+router.post('/update/:agencyId',auth.authorizeRequest("ADMIN"), agencyUpdateAction);
+router.post('/add',auth.authorizeRequest("ADMIN"), agencyAddAction);
 
 async function agencyListAction(request, response) {
     var agencies = await agencyRepo.getAllAgencies();

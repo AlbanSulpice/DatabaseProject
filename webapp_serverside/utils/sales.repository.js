@@ -56,7 +56,7 @@ module.exports = {
     },
     async getAllSales(){ 
         try {
-            let sql = "SELECT * FROM sales INNER JOIN landlords ON sale_landlord=landlord_id INNER JOIN clients ON sale_client=client_id INNER JOIN agencies ON sale_agency=agency_id";
+            let sql = "SELECT * FROM sales "; //INNER JOIN landlords ON sale_landlord=landlord_id INNER JOIN clients ON sale_client=client_id INNER JOIN agencies ON sale_agency=agency_id"
             const [rows, fields] = await pool.execute(sql);
             console.log("SaleS FETCHED: "+rows.length);
             return rows;
@@ -83,7 +83,7 @@ module.exports = {
             // sql = "SELECT * FROM Sales INNER JOIN brands ON sale_landlord=landlord_id WHERE Sale_id = "+SaleId; 
             // SQL INJECTION => !!!!ALWAYS!!!! sanitize user input!
             // escape input (not very good) OR prepared statements (good) OR use orm (GOOD!)
-            let sql = "SELECT * FROM sales INNER JOIN landlords ON sale_landlord=landlord_id INNER JOIN clients ON sale_client=client_id INNER JOIN agencies ON sale_agency=agency_id WHERE Sale_id = ?";
+            let sql = "SELECT * FROM sales WHERE Sale_id = ?";
             const [rows, fields] = await pool.execute(sql, [ SaleId ]);
             console.log("SINGLE Sale FETCHED: "+rows.length);
             if (rows.length == 1) {

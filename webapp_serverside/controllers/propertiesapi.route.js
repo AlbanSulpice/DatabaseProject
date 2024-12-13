@@ -2,13 +2,14 @@
 const express = require('express');
 const router = express.Router();
 const propertyRepo = require('../utils/properties.repository');
+const auth = require("../utils/users.auth");
 
 router.get('/landlords', landlordListAction);
 router.get('/list', propertyListAction);
 router.get('/show/:propertyId', propertyShowAction);
-router.get('/del/:propertyId', propertyDelAction);
-router.post('/update/:propertyId', propertyUpdateAction);
-router.post('/add', propertyAddAction);
+router.get('/del/:propertyId',auth.authorizeRequest("ADMIN"), propertyDelAction);
+router.post('/update/:propertyId',auth.authorizeRequest("ADMIN"), propertyUpdateAction);
+router.post('/add',auth.authorizeRequest("ADMIN"), propertyAddAction);
 
 // http://localhost:9000/propertiesapi/landlords
 async function landlordListAction(request, response) {

@@ -2,12 +2,13 @@
 const express = require('express');
 const router = express.Router();
 const clientRepo = require('../utils/clients.repository');
+const auth = require("../utils/users.auth");
 
 router.get('/list', clientListAction);
 router.get('/show/:clientID', clientShowAction);
-router.get('/del/:clientID', clientDelAction);
-router.post('/update/:clientID', clientUpdateAction);
-router.post('/add', clientAddAction);
+router.get('/del/:clientID',auth.authorizeRequest("ADMIN"), clientDelAction);
+router.post('/update/:clientID',auth.authorizeRequest("ADMIN"), clientUpdateAction);
+router.post('/add',auth.authorizeRequest("ADMIN"), clientAddAction);
 
 async function clientListAction(request, response) {
     var clients = await clientRepo.getAllClients();
